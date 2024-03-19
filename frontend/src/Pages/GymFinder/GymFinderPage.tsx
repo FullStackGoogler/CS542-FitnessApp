@@ -1,7 +1,7 @@
 const GymFinderPage = () => {
     return (
     <div>
-    <h1>Herro Test</h1>
+    <h1>Gym Finding</h1>
     </div>);
 }
 

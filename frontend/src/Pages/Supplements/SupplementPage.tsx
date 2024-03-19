@@ -1,7 +1,7 @@
 const SupplementPage = () => {
     return (
     <div>
-    <h1>Herro Test</h1>
+    <h1>Druggies</h1>
     </div>);
 }
 

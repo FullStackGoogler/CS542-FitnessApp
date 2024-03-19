@@ -1,7 +1,7 @@
 const MealPage = () => {
     return (
     <div>
-    <h1>Herro Test</h1>
+    <h1>Meal Plans</h1>
     </div>);
 }
 
