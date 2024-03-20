@@ -1,8 +1,11 @@
+import TopBar from "../../Components/TopBar";
+
 const MealPage = () => {
     return (
-    <div>
-    <h1>Meal Plans</h1>
-    </div>);
+        <div>
+            <TopBar title="Meal Plans" titleColor="#ffffff"/>
+        </div>
+    );
 }
 
 export default MealPage;

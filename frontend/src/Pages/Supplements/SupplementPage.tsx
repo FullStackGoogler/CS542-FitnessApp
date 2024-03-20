@@ -1,8 +1,11 @@
+import TopBar from "../../Components/TopBar";
+
 const SupplementPage = () => {
     return (
-    <div>
-    <h1>Druggies</h1>
-    </div>);
+        <div>
+            <TopBar title="Supplements" titleColor="#ffffff"/>
+        </div>
+    );
 }
 
 export default SupplementPage;

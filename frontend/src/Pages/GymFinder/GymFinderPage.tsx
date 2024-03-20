@@ -1,8 +1,11 @@
+import TopBar from "../../Components/TopBar";
+
 const GymFinderPage = () => {
     return (
-    <div>
-    <h1>Gym Finding</h1>
-    </div>);
+        <div>
+            <TopBar title="Gym Finder" titleColor="#ffffff"/>
+        </div>
+    );
 }
 
 export default GymFinderPage;

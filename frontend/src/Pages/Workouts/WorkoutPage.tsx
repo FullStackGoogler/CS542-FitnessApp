@@ -1,8 +1,11 @@
+import TopBar from "../../Components/TopBar";
+
 const WorkoutPage = () => {
     return (
-    <div>
-    <h1>Workouts</h1>
-    </div>);
+        <div>
+            <TopBar title="Workouts" titleColor="#ffffff"/>
+        </div>
+    );
 }
 
 export default WorkoutPage;
