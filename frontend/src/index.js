@@ -13,9 +13,17 @@ import MealPage from "./Pages/Meals/MealPage"
 import SupplementPage from "./Pages/Supplements/SupplementPage"
 import WorkoutPage from "./Pages/Workouts/WorkoutPage"
 
+import LoginPage from "./Pages/LoginPage/LoginPage"
+import UserSettingPage from "./Pages/UserSettings/UserSettingPage"
+
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <LoginPage/>,
+        errorElement: <ErrorPage/>
+    },
+    {
+        path: "/dashboard",
         element: <HomePage/>,
         errorElement: <ErrorPage/>
     },
@@ -37,6 +45,11 @@ const router = createBrowserRouter([
     {
         path:'/supplements',
         element: <SupplementPage/>,
+        errorElement: <ErrorPage/>
+    },
+    {
+        path:'/settings',
+        element: <UserSettingPage/>,
         errorElement: <ErrorPage/>
     }
 ]);

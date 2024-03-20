@@ -19,6 +19,7 @@ import MapIcon from '@mui/icons-material/Map';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import MedicationIcon from '@mui/icons-material/Medication';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -34,7 +35,7 @@ import { Link } from 'react-router-dom';
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        <ListItem disablePadding component={Link} to="/">
+        <ListItem disablePadding component={Link} to="/dashboard">
           <ListItemButton>
             <ListItemIcon>
               <HomeIcon/>
@@ -96,7 +97,16 @@ import { Link } from 'react-router-dom';
               <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: titleColor }}>
                 {title}
               </Typography>
-              <Button color="inherit">Login</Button>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+                //onClick={toggleDrawer(true)} TODO: onClick should bring a PFP dropdown/popup, with Buttons to either Logout or Navigate to UserSettingsPage
+              >
+                <AccountCircleIcon />
+              </IconButton>
             </Toolbar>
           </AppBar>
           <Drawer open={open} onClose={toggleDrawer(false)}>
