@@ -5,7 +5,7 @@ public class Review {
 	private int	reviewerRating;
 	private String reviewerDesc;
 
-	public Review(String reviewerID, String reviewerName, int reviewerRating, String reviewerDesc){
+	public Review(String reviewID, String reviewerName, int reviewerRating, String reviewerDesc){
 		this.reviewerID = reviewerID;
 		this.reviewerName = reviewerName;
 		this.reviewerRating = reviewerRating;
