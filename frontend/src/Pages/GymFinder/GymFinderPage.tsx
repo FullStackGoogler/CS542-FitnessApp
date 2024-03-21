@@ -57,7 +57,13 @@ const GymFinderPage: React.FC = () => {
                     </Marker>
                     {fitnessCenters.map((center, index) => (
                         <Marker key={index} position={[center.lat, center.lon]} icon={new Icon({ iconUrl: 'https://fonts.gstatic.com/s/i/materialicons/fitness_center/v10/24px.svg', iconSize: [25, 41], iconAnchor: [12, 41] })}>
-                            <Popup>{center.tags.name || 'Fitness Center'}</Popup>
+                            <Popup>
+                                {Object.entries(center.tags).map(([key, value]) => (
+                                    <div key={key}>
+                                        <strong>{key}: </strong> {value as string}
+                                    </div>
+                                ))}
+                            </Popup>
                         </Marker>
                     ))}
                 </MapContainer>
