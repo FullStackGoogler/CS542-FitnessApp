@@ -12,12 +12,12 @@ public class Review {
 		this.reviewerDesc = reviewerDesc;
 	}
 
-	public String getReviewerID() {
+	public String getReviewID() {
 		return reviewID;
 	}
 
-	public void setReviewerID(String reviewerID) {
-		this.reviewerID = reviewerID;
+	public void setReviewID(String reviewID) {
+		this.reviewID = reviewID;
 	}
 
 	public String getReviewerName() {
