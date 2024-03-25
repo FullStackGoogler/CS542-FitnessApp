@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import TopBar from "../../Components/TopBar";
 import { List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
 
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
+
 interface WorkoutItem {
     id: number;
     title: string;
@@ -32,7 +35,7 @@ const WorkoutPage: React.FC = () => {
             <div style={{ position: 'absolute', top: '60px', bottom: '0', width: '100%' }}>
                 <List>
                     {dummyItems.map(item => (
-                        <ListItem key={item.id} button onClick={() => handleClick(item)}>
+                        <ListItem key={item.id} onClick={() => handleClick(item)}>
                             <ListItemText primary={item.title} />
                         </ListItem>
                     ))}

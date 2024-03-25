@@ -16,7 +16,7 @@ const GymFinderPage: React.FC = () => {
                 fetchFitnessCenters(position.coords.latitude, position.coords.longitude);
             },
             error => {
-                console.error('Error getting location:', error);
+                console.error('Error:', error);
             }
         );
     }, []);
@@ -39,7 +39,7 @@ const GymFinderPage: React.FC = () => {
             setFitnessCenters(data.elements);
         })
         .catch(error => {
-            console.error('Error fetching fitness centers:', error);
+            console.error('Error:', error);
         });
     };
 
