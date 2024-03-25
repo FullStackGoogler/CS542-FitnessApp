@@ -20,6 +20,7 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import MedicationIcon from '@mui/icons-material/Medication';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -73,6 +74,14 @@ import { Link } from 'react-router-dom';
               <MedicationIcon/>
             </ListItemIcon>
             <ListItemText primary="Supplements" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding component={Link} to="/">
+          <ListItemButton>
+            <ListItemIcon>
+              <LogoutIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
           </ListItemButton>
         </ListItem>
       </List>

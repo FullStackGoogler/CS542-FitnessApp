@@ -1,7 +1,10 @@
 import React from 'react';
 import './LoginPage.css';
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
+  
   return(
     <div className="login-wrapper">
       <h1>Please Log In</h1>
@@ -15,7 +18,7 @@ export default function Login() {
           <input type="password" />
         </label>
         <div>
-          <button type="submit">Submit</button>
+          <button onClick={() => navigate('/dashboard')}>Submit</button>
         </div>
       </form>
     </div>
