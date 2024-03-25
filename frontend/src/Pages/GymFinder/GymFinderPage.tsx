@@ -22,7 +22,7 @@ const GymFinderPage: React.FC = () => {
     }, []);
 
     const fetchFitnessCenters = (latitude: number, longitude: number) => {
-        const radiusInMiles = 25;
+        const radiusInMiles = 25; //TODO: Figure out reasonable value
         const query = `[out:json];
             node(around:${radiusInMiles * 1609.34},${latitude},${longitude})["leisure"="fitness_centre"];
             out;`;
