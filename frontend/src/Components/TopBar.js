@@ -149,7 +149,7 @@ export default function TopBar({ title, titleColor }) {
                 sx={{ mr: 2 }}
                 onClick={toggleDrawer(true)}
               >
-                <MenuIcon />
+                <MenuIcon style={{ color: '#FFFFFF' }} />
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: titleColor }}>
                 {title}
@@ -159,10 +159,10 @@ export default function TopBar({ title, titleColor }) {
                 edge="start"
                 color="inherit"
                 aria-label="menu"
-                sx={{ mr: 2 }}
+                sx={{ mr: 1, }}
                 onClick={handlePFPOpen}
               >
-                <AccountCircleIcon />
+                <AccountCircleIcon style={{ color: '#FFFFFF', width: '50px', height: '50px' }} />
               </IconButton>
               <Menu
                 id="menu-appbar"

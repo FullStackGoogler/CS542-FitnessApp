@@ -16,9 +16,9 @@ const WorkoutListItem = ({ workout, onClick }) => {
             <div style={styles.leftContainer}>
                 <div style={styles.titleContainer}>
                     {isStarred ? (
-                        <StarIcon style={styles.starIcon} onClick={handleStarClick} />
+                        <StarIcon style={{ color: '#D1B000' }} onClick={handleStarClick} />
                     ) : (
-                        <StarBorderIcon style={styles.starIcon} onClick={handleStarClick} />
+                        <StarBorderIcon style={{ color: '#D1B000' }} onClick={handleStarClick} />
                     )}
                     <span style={styles.title}>{workout.title}</span>
                 </div>
