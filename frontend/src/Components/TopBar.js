@@ -24,7 +24,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
 import { //TODO: Either figure out CSS styling or use something else like Dialog (or code it raw) for a better looking popup
@@ -32,7 +32,18 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
   MenuItem
 } from '@mui/material';
 
-  export default function TopBar({ title, titleColor }) {
+import AppLogoIcon from './AppLogoIcon.png';
+
+const topBarColors = {
+  '/dashboard': 'homePage',
+  '/gymfinder': 'gymFinderPage',
+  '/workouts': 'workoutPage',
+  '/mealplans': 'mealPage',
+  '/supplements': 'supplementPage',
+  'settings': 'settingsPage',
+};
+
+export default function TopBar({ title, titleColor }) {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -41,6 +52,11 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
 
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPage = location.pathname;
+  const defaultTopBarColor = 'homePage';
+  const topBarColor = topBarColors[currentPage] || defaultTopBarColor;
 
   const handlePFPOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -56,20 +72,24 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
   };
 
   const handleLogoutClick = () => {
-    // Perform logout action, clear session, etc.
+    // Perform logout action, clear session, etc. TODO: Or maybe put this logic elsewhere
     navigate("/");
     handlePFPClose();
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box sx={{ width: 250, height: '100%', backgroundColor: '#7364D2' }} role="presentation" onClick={toggleDrawer(false)}>
+      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <img src={AppLogoIcon} alt="App Logo Icon" style={{ width: '50px', height: '50px'}} />
+        <Typography variant="subtitle" sx={{ color: 'white', textAlign: 'center' }}>Fitness App</Typography>
+      </div>
       <List>
         <ListItem disablePadding component={Link} to="/dashboard">
           <ListItemButton>
             <ListItemIcon>
               <HomeIcon/>
             </ListItemIcon>
-            <ListItemText primary="Home" />
+            <ListItemText primary="Home" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/gymfinder">
@@ -77,7 +97,7 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
             <ListItemIcon>
               <MapIcon/>
             </ListItemIcon>
-            <ListItemText primary="Gym Finder" />
+            <ListItemText primary="Gym Finder" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/workouts">
@@ -85,7 +105,7 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
             <ListItemIcon>
               <FitnessCenterIcon/>
             </ListItemIcon>
-            <ListItemText primary="Workouts" />
+            <ListItemText primary="Workouts" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/mealplans">
@@ -93,7 +113,7 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
             <ListItemIcon>
               <RestaurantIcon/>
             </ListItemIcon>
-            <ListItemText primary="Meal Plans" />
+            <ListItemText primary="Meal Plans" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/supplements">
@@ -101,7 +121,7 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
             <ListItemIcon>
               <MedicationIcon/>
             </ListItemIcon>
-            <ListItemText primary="Supplements" />
+            <ListItemText primary="Supplements" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/">
@@ -109,17 +129,17 @@ import { //TODO: Either figure out CSS styling or use something else like Dialog
             <ListItemIcon>
               <LogoutIcon/>
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Logout" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
       </List>
     </Box>
-);
+  );
 
   return (
     <ThemeProvider theme={theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar color="customColor">
+          <AppBar color={topBarColor}>
             <Toolbar>
               <IconButton
                 size="large"
