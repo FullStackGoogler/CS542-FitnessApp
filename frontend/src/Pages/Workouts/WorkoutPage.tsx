@@ -1,32 +1,33 @@
 import React, { useState } from "react";
 import TopBar from "../../Components/TopBar";
-import { List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { List, ListItemButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import ListItem  from "./Components/WorkoutListItem"
 
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
-
-interface WorkoutItem {
+// TODO: Adjust for the final iteration of the popup
+interface WorkoutPopup {
     id: number;
     title: string;
     description: string;
 }
 
 const WorkoutPage: React.FC = () => {
-    // Generating 30 dummy items
-    const dummyItems: WorkoutItem[] = Array.from({ length: 30 }, (_, index) => ({
+    // TODO: Replace dummies with actual data from AWS RDS
+    const dummyItems = Array.from({ length: 30 }, (_, index) => ({
         id: index + 1,
         title: `Workout ${index + 1}`,
         description: `Description for Workout ${index + 1}`,
+        daysPerWeek: 5,
+        image: `https://via.placeholder.com/150/FF5733/FFFFFF/?text=Workout+${index + 1}`, // TODO: Find a default workout picture
     }));
 
-    const [selectedItem, setSelectedItem] = useState<WorkoutItem | null>(null);
+    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutPopup | null>(null); 
 
-    const handleClick = (item: WorkoutItem) => {
-        setSelectedItem(item);
+    const handleClick = (item: WorkoutPopup) => {
+        setSelectedWorkout(item);
     };
 
     const handleClose = () => {
-        setSelectedItem(null);
+        setSelectedWorkout(null);
     };
 
     return (
@@ -35,17 +36,17 @@ const WorkoutPage: React.FC = () => {
             <div style={{ position: 'absolute', top: '60px', bottom: '0', width: '100%' }}>
                 <List>
                     {dummyItems.map(item => (
-                        <ListItem key={item.id} onClick={() => handleClick(item)}>
-                            <ListItemText primary={item.title} />
-                        </ListItem>
+                        <ListItemButton>
+                            <ListItem key={item.id} workout={item} onClick={() => handleClick(item)} />
+                        </ListItemButton>
                     ))}
                 </List>
             </div>
-            <Dialog open={selectedItem !== null} onClose={handleClose}>
-                <DialogTitle>{selectedItem?.title}</DialogTitle>
+            <Dialog open={selectedWorkout !== null} onClose={handleClose}>
+                <DialogTitle>{selectedWorkout?.title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {selectedItem?.description}
+                        {selectedWorkout?.description}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
