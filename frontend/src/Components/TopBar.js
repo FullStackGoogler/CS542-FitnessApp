@@ -1,9 +1,8 @@
-import * as React from 'react';
+import { useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -21,16 +20,45 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import MedicationIcon from '@mui/icons-material/Medication';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import { Link } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+import { //TODO: Either figure out CSS styling or use something else like Dialog (or code it raw) for a better looking popup
+  Menu,
+  MenuItem
+} from '@mui/material';
+
   export default function TopBar({ title, titleColor }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+
+  const handlePFPOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePFPClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSettingsClick = () => {
+    navigate("/settings");
+    handlePFPClose();
+  };
+
+  const handleLogoutClick = () => {
+    // Perform logout action, clear session, etc.
+    navigate("/");
+    handlePFPClose();
   };
 
   const DrawerList = (
@@ -112,10 +140,34 @@ import { Link } from 'react-router-dom';
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 2 }}
-                //onClick={toggleDrawer(true)} TODO: onClick should bring a PFP dropdown/popup, with Buttons to either Logout or Navigate to UserSettingsPage
+                onClick={handlePFPOpen}
               >
                 <AccountCircleIcon />
               </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handlePFPClose}
+              >
+                <MenuItem onClick={handleSettingsClick}>
+                  <SettingsIcon />
+                  Settings
+                </MenuItem>
+                <MenuItem onClick={handleLogoutClick}>
+                  <LogoutIcon />
+                  Logout
+                </MenuItem>
+              </Menu>
             </Toolbar>
           </AppBar>
           <Drawer open={open} onClose={toggleDrawer(false)}>
