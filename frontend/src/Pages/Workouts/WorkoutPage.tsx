@@ -29,15 +29,11 @@ const WorkoutPage: React.FC = () => {
     const handleClose = () => {
         setSelectedWorkout(null);
     };
-    //TODO: Use CSS to better align these
+
     return (
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Workouts</div>
-                <Button variant="contained" color="primary">Add a Workout</Button>
-            </div>
-            <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
+            <div style={{ position: 'absolute', top: '60px', bottom: '0', width: '100%' }}>
                 <List>
                     {dummyItems.map(item => (
                         <ListItemButton>
