@@ -27,14 +27,14 @@ const WorkoutPage: React.FC = () => {
     }
 
     const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null); 
-
+/*
     fetch('http://localhost:8080/api/exercises')
         .then(response => response.json())
         .then(data => {
             console.log('Exercises:', data);
         })
         .catch(error => console.error('Error:', error));
-
+*/
     //Chat GPT generated dummy data; replace with actual DB data
     const dummyItems = Array.from({ length: 30 }, (_, index) => ({
         userProgramID: index + 1,
