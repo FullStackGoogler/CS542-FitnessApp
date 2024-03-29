@@ -1,10 +1,12 @@
 require('dotenv').config()
-const express = require('express');
 const { Pool } = require('pg');
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
-var pool = new Pool({
+const pool = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PWD,
     database: process.env.DB_NAME,
@@ -12,7 +14,7 @@ var pool = new Pool({
     host: process.env.DB_HOST,
     ssl: { rejectUnauthorized: false },
 });
-console.log(require('dotenv').config())
+
 app.get('/api/exercises', async (req, res) => {
     try {
       const result = await pool.query('SELECT * FROM Exercise');

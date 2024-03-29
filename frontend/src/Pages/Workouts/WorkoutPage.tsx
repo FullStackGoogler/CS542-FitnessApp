@@ -1,28 +1,63 @@
 import React, { useState } from "react";
 import TopBar from "../../Components/TopBar";
-import { List, ListItemButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { List, ListItemButton, Button } from "@mui/material";
 import ListItem  from "./Components/WorkoutListItem"
-
-// TODO: Adjust for the final iteration of the popup
-interface WorkoutPopup {
-    id: number;
-    title: string;
-    description: string;
-}
+import WorkoutPopup from "./Components/WorkoutPopup"
 
 const WorkoutPage: React.FC = () => {
-    // TODO: Replace dummies with actual data from AWS RDS
+    interface WorkoutItem {
+        id: number;
+        title: string;
+        description: string;
+        daysPerWeek: number;
+        image: string;
+        workouts: {
+            id: number;
+            title: string;
+            targetedMuscles: string;
+            activities: {
+                id: number;
+                name: string;
+                reps: number;
+                sets: number;
+                rpe: number;
+                restTime: number;
+            }[];
+        }[];
+    }
+
+    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null); 
+
+    fetch('http://localhost:8080/api/exercises')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Exercises:', data);
+        })
+        .catch(error => console.error('Error:', error));
+
+    //Chat GPT generated dummy data; replace with actual DB data
     const dummyItems = Array.from({ length: 30 }, (_, index) => ({
         id: index + 1,
-        title: `Workout ${index + 1}`,
-        description: `Description for Workout ${index + 1}`,
+        title: `User Program ${index + 1}`,
+        description: `Description for Program ${index + 1}`,
         daysPerWeek: 5,
-        image: `https://via.placeholder.com/150/FF5733/FFFFFF/?text=Workout+${index + 1}`, // TODO: Find a default workout picture
+        image: `https://via.placeholder.com/150/FF5733/FFFFFF/?text=Workout+${index + 1}`,
+        workouts: Array.from({ length: 3 }, (_, i) => ({
+            id: i + 1,
+            title: `Workout ${i + 1}`,
+            targetedMuscles: "Muscles",
+            activities: Array.from({ length: 3 }, (_, j) => ({
+                id: j + 1,
+                name: `Activity ${j + 1}`,
+                reps: 8,
+                sets: 5,
+                rpe: 5,
+                restTime: 2
+            }))
+        }))
     }));
 
-    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutPopup | null>(null); 
-
-    const handleClick = (item: WorkoutPopup) => {
+    const handleClick = (item: WorkoutItem) => {
         setSelectedWorkout(item);
     };
 
@@ -34,8 +69,8 @@ const WorkoutPage: React.FC = () => {
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Workouts</div>
-                <Button variant="contained" color="primary">Add a Workout</Button>
+                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of User Programs</div>
+                <Button variant="contained" color="primary">Add a Program</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
@@ -46,17 +81,7 @@ const WorkoutPage: React.FC = () => {
                     ))}
                 </List>
             </div>
-            <Dialog open={selectedWorkout !== null} onClose={handleClose}>
-                <DialogTitle>{selectedWorkout?.title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {selectedWorkout?.description}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Close</Button>
-                </DialogActions>
-            </Dialog>
+            <WorkoutPopup selectedWorkout={selectedWorkout} onClose={handleClose} />
         </div>
     );
 }
