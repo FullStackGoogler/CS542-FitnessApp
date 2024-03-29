@@ -1,17 +1,18 @@
+require('dotenv').config()
 const express = require('express');
 const { Pool } = require('pg');
 
 const app = express();
 
 var pool = new Pool({
-    user: "postgres",
-    password: "DataFitness8!",
-    database: "postgres",
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: process.env.DB_NAME,
     port: 5432,
-    host: "finalcs542.cle4qgwiih1x.us-east-2.rds.amazonaws.com",
+    host: process.env.DB_HOST,
     ssl: { rejectUnauthorized: false },
 });
-
+console.log(require('dotenv').config())
 app.get('/api/exercises', async (req, res) => {
     try {
       const result = await pool.query('SELECT * FROM Exercise');
