@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "../../Components/TopBar";
 import { List, ListItemButton, Button } from "@mui/material";
 import ListItem  from "./Components/WorkoutListItem"
@@ -26,7 +26,8 @@ const WorkoutPage: React.FC = () => {
         }[];
     }
 
-    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null); 
+    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null);
+    const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
 /*
     fetch('http://localhost:8080/api/exercises')
         .then(response => response.json())
@@ -35,6 +36,24 @@ const WorkoutPage: React.FC = () => {
         })
         .catch(error => console.error('Error:', error));
 */
+    
+    useEffect(() => {
+        fetch('http://localhost:8080/api/userprograms')
+            .then(response => response.json())
+            .then(data => {
+                setUserPrograms(data.map((program: any) => ({
+                    userProgramID: program.userprogramid,
+                    userProgramName: program.user_program_name,
+                    userProgramDescription: program.user_program_desc,
+                    daysPerWeek: program.num_days_per_week,
+                    image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`, //TODO: Get better default image URL here
+                    workouts: []
+                })));
+            })
+        .catch(error => console.error('Error:', error));
+
+    })
+
     //Chat GPT generated dummy data; replace with actual DB data
     const dummyItems = Array.from({ length: 30 }, (_, index) => ({
         userProgramID: index + 1,
@@ -59,7 +78,44 @@ const WorkoutPage: React.FC = () => {
 
     const handleClick = (item: WorkoutItem) => {
         setSelectedWorkout(item);
-    };
+        console.log(item.userProgramID);
+        fetch(`http://localhost:8080/api/userprogram/${item.userProgramID}/workouts`)
+            .then(response => response.json())
+            .then(workoutData => {
+                if (Array.isArray(workoutData)) { // Check if workoutData is an array
+                    const workoutsMap = new Map<number, any>();
+                    workoutData.forEach((workout: any) => {
+                        const { workout_id, workout_name, target_group, ...activity } = workout;
+                        const activityData = {
+                            activityID: activity.activity_id,
+                            exerciseID: activity.exercise_name,
+                            reps: activity.reps,
+                            sets: activity.sets,
+                            rpe: activity.rpe,
+                            restTime: activity.rest_time
+                        };
+                        if (workoutsMap.has(workout_id)) {
+                            workoutsMap.get(workout_id).activities.push(activityData);
+                        } else {
+                            workoutsMap.set(workout_id, {
+                                workoutID: workout_id,
+                                workoutName: workout_name,
+                                targetGroup: target_group,
+                                activities: [activityData]
+                            });
+                        }
+                    });
+                    const workouts = Array.from(workoutsMap.values());
+                    setSelectedWorkout(prevSelectedWorkout => ({
+                        ...prevSelectedWorkout!,
+                        workouts: workouts
+                    }));
+                } else {
+                    console.error('Workouts data is not an array:', workoutData);
+                }
+            })
+            .catch(error => console.error('Error fetching workouts:', error));
+    };    
 
     const handleClose = () => {
         setSelectedWorkout(null);
@@ -74,7 +130,7 @@ const WorkoutPage: React.FC = () => {
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {dummyItems.map(item => (
+                    {userPrograms.map(item => (
                         <ListItemButton>
                             <ListItem key={item.userProgramID} workout={item} onClick={() => handleClick(item)} />
                         </ListItemButton>
