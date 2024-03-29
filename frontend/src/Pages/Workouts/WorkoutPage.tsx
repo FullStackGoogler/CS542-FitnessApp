@@ -6,18 +6,18 @@ import WorkoutPopup from "./Components/WorkoutPopup"
 
 const WorkoutPage: React.FC = () => {
     interface WorkoutItem {
-        id: number;
-        title: string;
-        description: string;
+        userProgramID: number;
+        userProgramName: string;
+        userProgramDescription: string;
         daysPerWeek: number;
         image: string;
         workouts: {
-            id: number;
-            title: string;
-            targetedMuscles: string;
+            workoutID: number;
+            workoutName: string;
+            targetGroup: string;
             activities: {
-                id: number;
-                name: string;
+                activityID: number;
+                exerciseID: string; //TODO: Needs to grab the exerciseName with the matching exerciseID
                 reps: number;
                 sets: number;
                 rpe: number;
@@ -37,18 +37,18 @@ const WorkoutPage: React.FC = () => {
 
     //Chat GPT generated dummy data; replace with actual DB data
     const dummyItems = Array.from({ length: 30 }, (_, index) => ({
-        id: index + 1,
-        title: `User Program ${index + 1}`,
-        description: `Description for Program ${index + 1}`,
+        userProgramID: index + 1,
+        userProgramName: `User Program ${index + 1}`,
+        userProgramDescription: `Description for Program ${index + 1}`,
         daysPerWeek: 5,
         image: `https://via.placeholder.com/150/FF5733/FFFFFF/?text=Workout+${index + 1}`,
         workouts: Array.from({ length: 3 }, (_, i) => ({
-            id: i + 1,
-            title: `Workout ${i + 1}`,
-            targetedMuscles: "Muscles",
+            workoutID: i + 1,
+            workoutName: `Workout ${i + 1}`,
+            targetGroup: "Muscles",
             activities: Array.from({ length: 3 }, (_, j) => ({
-                id: j + 1,
-                name: `Activity ${j + 1}`,
+                activityID: j + 1,
+                exerciseID: `Activity ${j + 1}`,
                 reps: 8,
                 sets: 5,
                 rpe: 5,
@@ -76,7 +76,7 @@ const WorkoutPage: React.FC = () => {
                 <List>
                     {dummyItems.map(item => (
                         <ListItemButton>
-                            <ListItem key={item.id} workout={item} onClick={() => handleClick(item)} />
+                            <ListItem key={item.userProgramID} workout={item} onClick={() => handleClick(item)} />
                         </ListItemButton>
                     ))}
                 </List>

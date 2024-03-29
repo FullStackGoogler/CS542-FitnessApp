@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 const WorkoutPopup = ({ selectedWorkout, onClose }) => {
     if (!selectedWorkout) return null;
 
-    const { title, description, daysPerWeek, workouts } = selectedWorkout;
+    const { userProgramName, userProgramDescription, daysPerWeek, workouts } = selectedWorkout;
 
     return (
         <Dialog open={true} onClose={onClose} sx={{
@@ -15,20 +15,20 @@ const WorkoutPopup = ({ selectedWorkout, onClose }) => {
               },
             },
           }}>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle>{userProgramName}</DialogTitle>
             <DialogContent >
                 <DialogContentText>
-                    {description}
+                    {userProgramDescription}
                     <br />
                     Number of days per week: {daysPerWeek}
                 </DialogContentText>
                 {workouts.map(workout => (
-                    <div key={workout.id}>
-                        <h3>{workout.title} ({workout.targetedMuscles})</h3>
+                    <div key={workout.workoutID}>
+                        <h3>{workout.workoutName} ({workout.targetGroup})</h3>
                         <ul>
                             {workout.activities.map(activity => (
-                                <li key={activity.id}>
-                                    {activity.name}<br />
+                                <li key={activity.activityID}>
+                                    {activity.exerciseID}<br />
                                     {activity.reps} reps for {activity.sets} sets, {activity.rpe} RPE, {activity.restTime} min Rest Time
                                 </li>
                             ))}

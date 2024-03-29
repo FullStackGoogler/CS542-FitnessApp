@@ -20,9 +20,9 @@ const WorkoutListItem = ({ workout, onClick }) => {
                     ) : (
                         <StarBorderIcon style={{ color: '#D1B000' }} onClick={handleStarClick} />
                     )}
-                    <span style={styles.title}>{workout.title}</span>
+                    <span style={styles.title}>{workout.userProgramName}</span>
                 </div>
-                <ListItemText primary={workout.description} />
+                <ListItemText primary={workout.userProgramDescription} />
                 <ListItemText secondary={`${workout.daysPerWeek} days per week`} />
             </div>
             <div style={styles.imageContainer}>
