@@ -9,6 +9,7 @@ const WorkoutPage: React.FC = () => {
         userProgramID: number;
         userProgramName: string;
         userProgramDescription: string;
+        userProgramOwner: string;
         daysPerWeek: number;
         image: string;
         workouts: {
@@ -28,14 +29,6 @@ const WorkoutPage: React.FC = () => {
 
     const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
-/*
-    fetch('http://localhost:8080/api/exercises')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Exercises:', data);
-        })
-        .catch(error => console.error('Error:', error));
-*/
     
     useEffect(() => {
         fetch('http://localhost:8080/api/userprograms')
@@ -45,6 +38,7 @@ const WorkoutPage: React.FC = () => {
                     userProgramID: program.userprogramid,
                     userProgramName: program.user_program_name,
                     userProgramDescription: program.user_program_desc,
+                    userProgramOwner: program.username,
                     daysPerWeek: program.num_days_per_week,
                     image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`, //TODO: Get better default image URL here
                     workouts: []
@@ -53,28 +47,6 @@ const WorkoutPage: React.FC = () => {
         .catch(error => console.error('Error:', error));
 
     })
-
-    //Chat GPT generated dummy data; replace with actual DB data
-    const dummyItems = Array.from({ length: 30 }, (_, index) => ({
-        userProgramID: index + 1,
-        userProgramName: `User Program ${index + 1}`,
-        userProgramDescription: `Description for Program ${index + 1}`,
-        daysPerWeek: 5,
-        image: `https://via.placeholder.com/150/FF5733/FFFFFF/?text=Workout+${index + 1}`,
-        workouts: Array.from({ length: 3 }, (_, i) => ({
-            workoutID: i + 1,
-            workoutName: `Workout ${i + 1}`,
-            targetGroup: "Muscles",
-            activities: Array.from({ length: 3 }, (_, j) => ({
-                activityID: j + 1,
-                exerciseID: `Activity ${j + 1}`,
-                reps: 8,
-                sets: 5,
-                rpe: 5,
-                restTime: 2
-            }))
-        }))
-    }));
 
     const handleClick = (item: WorkoutItem) => {
         setSelectedWorkout(item);
@@ -110,8 +82,6 @@ const WorkoutPage: React.FC = () => {
                         ...prevSelectedWorkout!,
                         workouts: workouts
                     }));
-                } else {
-                    console.error('Workouts data is not an array:', workoutData);
                 }
             })
             .catch(error => console.error('Error fetching workouts:', error));

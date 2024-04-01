@@ -27,7 +27,7 @@ app.get('/api/exercises', async (req, res) => {
 
 app.get('/api/userprograms', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM userprogram');
+    const result = await pool.query('SELECT usertable.username, userprogram.* FROM userprogram JOIN usertable ON userprogram.owner = usertable.userid');
     res.json(result.rows);
   } catch (err) {
     console.error('Error executing query:', err);
@@ -58,17 +58,16 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
                   e.exercise_name,
                   e.muscle_group,
                   e.equipment,
-                  e.video
+                  e.video,
+                  u.username
               FROM 
                   userprogram up
+              JOIN
+                  usertable u ON up.owner = u.userid
               JOIN 
-                  userprogramhasworkout uphw ON up.userprogramid = uphw.userprogramid
+                  workout w ON up.userprogramid = w.userprogram_id
               JOIN 
-                  workout w ON uphw.workout_id = w.workout_id
-              JOIN 
-                  consists c ON w.workout_id = c.workout_id
-              JOIN 
-                  activity a ON c.activity_id = a.activity_id
+                  activity a ON w.workout_id = a.workout
               JOIN 
                   exercise e ON a.exercise = e.exercise_id
               WHERE 

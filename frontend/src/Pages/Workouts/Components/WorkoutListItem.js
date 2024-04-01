@@ -4,6 +4,8 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 
 const WorkoutListItem = ({ workout, onClick }) => {
+    console.log(workout)
+
     const [isStarred, setIsStarred] = useState(false);
 
     function handleStarClick(event) {
@@ -23,7 +25,7 @@ const WorkoutListItem = ({ workout, onClick }) => {
                     <span style={styles.title}>{workout.userProgramName}</span>
                 </div>
                 <ListItemText primary={workout.userProgramDescription} />
-                <ListItemText secondary={`${workout.daysPerWeek} days per week`} />
+                <ListItemText secondary={`${workout.daysPerWeek} days per week | Created by ${workout.userProgramOwner}`} />
             </div>
             <div style={styles.imageContainer}>
                 <img src={workout.image} alt={workout.title} style={styles.image} />
