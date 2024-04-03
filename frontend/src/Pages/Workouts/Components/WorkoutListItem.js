@@ -4,8 +4,6 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 
 const WorkoutListItem = ({ workout, onClick }) => {
-    console.log(workout)
-
     const [isStarred, setIsStarred] = useState(false);
 
     function handleStarClick(event) {

@@ -39,7 +39,6 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
   const userProgramId = req.params.userProgramId;
 
   try {
-      // Query to fetch all data related to the selected user program ID
       const programQuery = {
           text: `
           SELECT 
@@ -85,7 +84,6 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
 });
 
 app.get('/api/userprogram/gre', async (req, res) => {
-
   try {
       const result = await pool.query('SELECT workout.* FROM workout JOIN userprogramhasworkout ON workout.workout_id = userprogramhasworkout.workout_id WHERE userprogramhasworkout.userprogramid = 1');
       res.json(result.rows);

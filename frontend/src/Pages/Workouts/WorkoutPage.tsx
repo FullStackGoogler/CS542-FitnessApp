@@ -3,6 +3,9 @@ import TopBar from "../../Components/TopBar";
 import { List, ListItemButton, Button } from "@mui/material";
 import ListItem  from "./Components/WorkoutListItem"
 import WorkoutPopup from "./Components/WorkoutPopup"
+import WorkoutForm from "./Components/WorkoutForm";
+
+import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 
 const WorkoutPage: React.FC = () => {
     interface WorkoutItem {
@@ -18,7 +21,7 @@ const WorkoutPage: React.FC = () => {
             targetGroup: string;
             activities: {
                 activityID: number;
-                exerciseID: string; //TODO: Needs to grab the exerciseName with the matching exerciseID
+                exerciseID: number; //TODO: Needs to grab the exerciseName with the matching exerciseID
                 reps: number;
                 sets: number;
                 rpe: number;
@@ -29,6 +32,8 @@ const WorkoutPage: React.FC = () => {
 
     const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
+    const [createProgram, setCreateProgram] = useState(false);
+    const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
     
     useEffect(() => {
         fetch('http://localhost:8080/api/userprograms')
@@ -50,7 +55,7 @@ const WorkoutPage: React.FC = () => {
 
     const handleClick = (item: WorkoutItem) => {
         setSelectedWorkout(item);
-        console.log(item.userProgramID);
+
         fetch(`http://localhost:8080/api/userprogram/${item.userProgramID}/workouts`)
             .then(response => response.json())
             .then(workoutData => {
@@ -90,13 +95,35 @@ const WorkoutPage: React.FC = () => {
     const handleClose = () => {
         setSelectedWorkout(null);
     };
+
+    const handleCreateProgram = () => {
+        setCreateProgram(true);
+    };
+
+    const handleCreateProgramSubmit = (workoutItem: WorkoutItem) => {
+        //TODO: Figure out how to decompoes this interface into SQL queries
+        console.log("Workout Item:", workoutItem);
+        setCreateProgram(false);
+    }
+
+    const handleCreateProgramClose = () => {
+        setConfirmDiscardForm(true);
+    };
+
+    const handleDiscardFormClose = (discard: boolean) => {
+        if (discard) {
+            setCreateProgram(false);
+        }
+        setConfirmDiscardForm(false);
+    };
+
     //TODO: Use CSS to better align these
     return (
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of User Programs</div>
-                <Button variant="contained" color="primary">Add a Program</Button>
+                <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
@@ -108,6 +135,17 @@ const WorkoutPage: React.FC = () => {
                 </List>
             </div>
             <WorkoutPopup selectedWorkout={selectedWorkout} onClose={handleClose} />
+
+            <WorkoutForm open={createProgram} onClose={handleCreateProgramClose} onSubmit={handleCreateProgramSubmit} />
+
+            <Dialog open={confirmDiscardForm} onClose={() => setConfirmDiscardForm(false)}>
+                <DialogTitle>Do you want to discard changes?</DialogTitle>
+                <DialogContent>Warning: Closing this tab will delete any progress made.</DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleDiscardFormClose(true)}>Yes</Button>
+                    <Button onClick={() => handleDiscardFormClose(false)}>No</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
