@@ -25,7 +25,7 @@ const WorkoutPopup = ({ selectedWorkout, onClose }) => {
     }));
 
     //Merge sorted real Workouts and dummy Rest Days
-    const allWorkouts = [...sortedWorkouts, ...restDays]
+    const allWorkouts = [...sortedWorkouts, ...restDays].sort((a,b) => a.workoutPosition - b.workoutPosition)
 
     return (
         <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
