@@ -33,7 +33,6 @@ const WorkoutPage: React.FC = () => {
     const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);
-    const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
     
     useEffect(() => {
         fetch('http://localhost:8080/api/userprograms')
@@ -106,17 +105,6 @@ const WorkoutPage: React.FC = () => {
         setCreateProgram(false);
     }
 
-    const handleCreateProgramClose = () => {
-        setConfirmDiscardForm(true);
-    };
-
-    const handleDiscardFormClose = (discard: boolean) => {
-        if (discard) {
-            setCreateProgram(false);
-        }
-        setConfirmDiscardForm(false);
-    };
-
     //TODO: Use CSS to better align these
     return (
         <div>
@@ -136,16 +124,7 @@ const WorkoutPage: React.FC = () => {
             </div>
             <WorkoutPopup selectedWorkout={selectedWorkout} onClose={handleClose} />
 
-            <WorkoutForm open={createProgram} onClose={handleCreateProgramClose} onSubmit={handleCreateProgramSubmit} />
-
-            <Dialog open={confirmDiscardForm} onClose={() => setConfirmDiscardForm(false)}>
-                <DialogTitle>Do you want to discard changes?</DialogTitle>
-                <DialogContent>Warning: Closing this tab will delete any progress made.</DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleDiscardFormClose(true)}>Yes</Button>
-                    <Button onClick={() => handleDiscardFormClose(false)}>No</Button>
-                </DialogActions>
-            </Dialog>
+            <WorkoutForm open={createProgram} onClose={handleCreateProgramSubmit}/>
         </div>
     );
 }

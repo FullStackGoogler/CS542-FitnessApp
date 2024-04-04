@@ -31,11 +31,10 @@ interface Exercise {
 
 interface Props {
     open: boolean;
-    onClose: () => void;
-    onSubmit: (workoutItem: WorkoutItem) => void;
+    onClose: (workoutItem: WorkoutItem) => void;
 }
 
-const WorkoutForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
+const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
     const [programName, setProgramName] = useState("");
     const [programDescription, setProgramDescription] = useState("");
     const [imageURL, setImageURL] = useState("");
@@ -83,10 +82,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
             }))
         };
 
-        console.log(workoutItem);
-
-        onSubmit(workoutItem);
-        onClose();
+        onClose(workoutItem);
     };
 
     const handleWorkoutNameChange = (index: number, value: string) => {
@@ -147,7 +143,9 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                         id="userProgramName"
                         name="userProgramName"
                         value={programName}
-                        onChange={(e) => setProgramName(e.target.value)}
+                        onChange={(e) => {
+                            setProgramName(e.target.value);
+                        }}
                     />
                 </div>
                 <div>
