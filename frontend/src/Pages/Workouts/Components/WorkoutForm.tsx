@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface WorkoutItem {
+interface WorkoutItem { //Define interface for a singular complete User Program
     userProgramID: number;
     userProgramName: string;
     userProgramDescription: string;
@@ -13,13 +13,17 @@ interface WorkoutItem {
         workoutID: number;
         workoutName: string;
         targetGroup: string;
+        workoutPosition: number;
         activities: {
             activityID: number;
-            exerciseID: number;
-            reps: number;
+            exerciseName: number;
+            muscleGroup: string;
+            reps: string;
             sets: number;
             rpe: number;
-            restTime: number;
+            restTime: string;
+            notes: string;
+            position: number;
         }[];
     }[];
 }
@@ -75,6 +79,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                 workoutID: index, //TODO: Figure out how to create a unique ID
                 workoutName: workout.workoutName,
                 targetGroup: workout.targetGroup,
+                workoutPosition: index, //TODO: Check that this is correct
                 activities: workout.activities.map(activity => ({
                     ...activity,
                     exerciseID: parseInt(activity.exerciseID)

@@ -8,7 +8,7 @@ import WorkoutForm from "./Components/WorkoutForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 
 const WorkoutPage: React.FC = () => {
-    interface WorkoutItem {
+    interface WorkoutItem { //Define interface for a singular complete User Program
         userProgramID: number;
         userProgramName: string;
         userProgramDescription: string;
@@ -19,21 +19,26 @@ const WorkoutPage: React.FC = () => {
             workoutID: number;
             workoutName: string;
             targetGroup: string;
+            workoutPosition: number;
             activities: {
                 activityID: number;
-                exerciseID: number; //TODO: Needs to grab the exerciseName with the matching exerciseID
-                reps: number;
+                exerciseName: number;
+                muscleGroup: string;
+                reps: string;
                 sets: number;
                 rpe: number;
-                restTime: number;
+                restTime: string;
+                notes: string;
+                position: number;
             }[];
         }[];
     }
 
-    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutItem | null>(null);
+    const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);
     
+    //Fetch all User Programs on page load
     useEffect(() => {
         fetch('http://localhost:8080/api/userprograms')
             .then(response => response.json())
@@ -49,50 +54,53 @@ const WorkoutPage: React.FC = () => {
                 })));
             })
         .catch(error => console.error('Error:', error));
-
     })
 
-    const handleClick = (item: WorkoutItem) => {
-        setSelectedWorkout(item);
+    //Load a complete User Program
+    const handlePopupOpen = (item: WorkoutItem) => {
+        setSelectedProgram(item);
 
         fetch(`http://localhost:8080/api/userprogram/${item.userProgramID}/workouts`)
             .then(response => response.json())
             .then(workoutData => {
-                if (Array.isArray(workoutData)) { // Check if workoutData is an array
-                    const workoutsMap = new Map<number, any>();
-                    workoutData.forEach((workout: any) => {
-                        const { workout_id, workout_name, target_group, ...activity } = workout;
-                        const activityData = {
-                            activityID: activity.activity_id,
-                            exerciseID: activity.exercise_name,
-                            reps: activity.reps,
-                            sets: activity.sets,
-                            rpe: activity.rpe,
-                            restTime: activity.rest_time
-                        };
-                        if (workoutsMap.has(workout_id)) {
-                            workoutsMap.get(workout_id).activities.push(activityData);
-                        } else {
-                            workoutsMap.set(workout_id, {
-                                workoutID: workout_id,
-                                workoutName: workout_name,
-                                targetGroup: target_group,
-                                activities: [activityData]
-                            });
-                        }
-                    });
-                    const workouts = Array.from(workoutsMap.values());
-                    setSelectedWorkout(prevSelectedWorkout => ({
-                        ...prevSelectedWorkout!,
-                        workouts: workouts
-                    }));
-                }
+                const workoutsMap = new Map<number, any>();
+
+                workoutData.forEach((workout: any) => {
+                    const { workout_id, workout_name, target_group, workoutposition, ...activity } = workout;
+                    const activityData = {
+                        activityID: activity.activity_id,
+                        exerciseName: activity.exercise_name,
+                        muscleGroup: activity.muscle_group,
+                        reps: activity.reps,
+                        sets: activity.sets,
+                        rpe: activity.rpe,
+                        restTime: activity.rest,
+                        notes: activity.note,
+                        position: activity.position
+                    };
+
+                    if (workoutsMap.has(workout_id)) {
+                        workoutsMap.get(workout_id).activities.push(activityData);
+                    } else {
+                        workoutsMap.set(workout_id, {
+                            workoutID: workout_id,
+                            workoutName: workout_name,
+                            targetGroup: target_group,
+                            workoutPosition: workoutposition,
+                            activities: [activityData]
+                        });
+                    }
+                });
+                const workouts = Array.from(workoutsMap.values());
+                setSelectedProgram(prevSelectedWorkout => ({
+                    ...prevSelectedWorkout!,
+                    workouts: workouts
+                })); 
             })
-            .catch(error => console.error('Error fetching workouts:', error));
     };    
 
-    const handleClose = () => {
-        setSelectedWorkout(null);
+    const handlePopupClose = () => {
+        setSelectedProgram(null);
     };
 
     const handleCreateProgram = () => {
@@ -105,7 +113,6 @@ const WorkoutPage: React.FC = () => {
         setCreateProgram(false);
     }
 
-    //TODO: Use CSS to better align these
     return (
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
@@ -117,12 +124,12 @@ const WorkoutPage: React.FC = () => {
                 <List>
                     {userPrograms.map(item => (
                         <ListItemButton>
-                            <ListItem key={item.userProgramID} workout={item} onClick={() => handleClick(item)} />
+                            <ListItem key={item.userProgramID} workout={item} onClick={() => handlePopupOpen(item)} />
                         </ListItemButton>
                     ))}
                 </List>
             </div>
-            <WorkoutPopup selectedWorkout={selectedWorkout} onClose={handleClose} />
+            <WorkoutPopup selectedWorkout={selectedProgram} onClose={handlePopupClose} />
 
             <WorkoutForm open={createProgram} onClose={handleCreateProgramSubmit}/>
         </div>
