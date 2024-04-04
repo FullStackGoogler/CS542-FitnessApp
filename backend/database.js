@@ -15,6 +15,17 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false },
 });
 
+app.get('/api/nutritionplan', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM Nutrition_Plan');
+    res.send(result.rows);
+    //res.json(result.rows);
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/api/exercises', async (req, res) => {
     try {
       const result = await pool.query('SELECT * FROM Exercise');

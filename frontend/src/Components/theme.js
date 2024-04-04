@@ -11,6 +11,9 @@ const theme = createTheme({
     workoutPage: {
       main: '#858AE3',
     },
+    nutritionPlanPage: {
+      main: '#93CAF6',
+    },
     mealPage: {
       main: '#93CAF6',
     },

@@ -11,6 +11,7 @@ import GymFinderPage from "./Pages/GymFinder/GymFinderPage"
 import HomePage from "./Pages/HomePage/HomePage"
 import MealPage from "./Pages/Meals/MealPage"
 import SupplementPage from "./Pages/Supplements/SupplementPage"
+import NutritionPlanPage from "./Pages/NutritionPlans/NutritionPlanPage"
 import WorkoutPage from "./Pages/Workouts/WorkoutPage"
 
 import LoginPage from "./Pages/LoginPage/LoginPage"
@@ -40,6 +41,11 @@ const router = createBrowserRouter([
     {
         path:'/mealplans',
         element: <MealPage/>,
+        errorElement: <ErrorPage/>
+    },
+    {
+        path:'/nutritionplans',
+        element: <NutritionPlanPage/>,
         errorElement: <ErrorPage/>
     },
     {

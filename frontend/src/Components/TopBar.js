@@ -39,6 +39,7 @@ const topBarColors = {
   '/gymfinder': 'gymFinderPage',
   '/workouts': 'workoutPage',
   '/mealplans': 'mealPage',
+  '/nutritionplans': 'nutritionPlanPage',
   '/supplements': 'supplementPage',
   'settings': 'settingsPage',
 };
@@ -114,6 +115,14 @@ export default function TopBar({ title, titleColor }) {
               <RestaurantIcon/>
             </ListItemIcon>
             <ListItemText primary="Meal Plans" sx={{ color: 'white' }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding component={Link} to="/nutritionplans">
+          <ListItemButton>
+            <ListItemIcon>
+              <RestaurantIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Nutrition Plans" sx={{ color: 'white' }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding component={Link} to="/supplements">
