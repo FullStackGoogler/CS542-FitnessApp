@@ -10,12 +10,21 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material
 
 const SupplementPage: React.FC = () => {
     interface SupplementItem {
-        supplement_id: number;
-        name: string;
-        quantity: number;
-        protein: number;
-        fat: number;
-        carb: number;
+        supplementid: number;
+        product_name: string;
+        product_category: string;
+        product_description: string;
+        brand_name: string;
+        link:string;
+        price:number;
+        price_per_serving:number;
+        overall_rating:number;
+        number_of_reviews: number;
+        verified_buyer_rating: number;
+        verified_buyer_number: number;
+        top_flavor_rated: string;
+        number_of_flavors: number;
+        average_flavor_rating: number;
     }
 
     const [selectedSupplement, setSelectedSupplement] = useState<SupplementItem | null>(null);
@@ -42,17 +51,26 @@ const SupplementPage: React.FC = () => {
 ]*/
    
     useEffect(() => {
-        fetch('http://localhost:8080/api/supplement')
+        fetch('http://localhost:8080/api/supplements')
             .then(response => response.json())
             .then(data =>  {
                 //console.log("data")
                 setSupplement(data.map((plan: any) => ({
-                    supplement_id: plan.supplement_id,
-                    name:  plan.name,
-                    quantity:  plan.quantity,
-                    protein: plan.protein,
-                    fat: plan.fat,
-                    carb: plan.carb,
+                    supplementid: plan.supplementid,
+                    product_name: plan.product_name,
+                    product_category: plan.product_category,
+                    product_description: plan.product_description,
+                    brand_name: plan.brand_name,
+                    link:plan.link,
+                    price:plan.price,
+                    price_per_serving:plan.price_per_serving,
+                    overall_rating:plan.overall_rating,
+                    number_of_reviews: plan.number_of_reviews,
+                    verified_buyer_rating: plan.verified_buyer_rating,
+                    verified_buyer_number: plan.verified_buyer_number,
+                    top_flavor_rated: plan.top_flavor_rated,
+                    number_of_flavors: plan.number_of_flavors,
+                    average_flavor_rating: plan.average_flavor_rating
                 })));
             }).catch(error => console.error('Error:', error));
 
@@ -60,8 +78,8 @@ const SupplementPage: React.FC = () => {
 
     const handleClick = (item: SupplementItem) => {
         setSelectedSupplement(item);
-        console.log(item.supplement_id);
-        fetch(`http://localhost:8080/api/supplement/${item.supplement_id}`)
+        console.log(item.supplementid);
+        fetch(`http://localhost:8080/api/supplements/${item.supplementid}`)
             .then(response => response.json())
             .then(SupplementData => {
                     console.log(SupplementData)
@@ -74,17 +92,17 @@ const SupplementPage: React.FC = () => {
         setSelectedSupplement(null);
     };
 
-    const handleCreatePlan = () => {
+    const handleCreate = () => {
         setCreatePlan(true);
     };
 
-    const handleCreatePlanSubmit = (supplement: SupplementItem) => {
+    const handleCreateSubmit = (supplement: SupplementItem) => {
         //TODO: Figure out how to decompoes this interface into SQL queries
         console.log("Supplement:", supplement);
         setCreatePlan(false);
     }
 
-    const handleCreatePlanClose = () => {
+    const handleCreateClose = () => {
         setConfirmDiscardForm(true);
     };
 
@@ -101,7 +119,7 @@ const SupplementPage: React.FC = () => {
             <TopBar title="Supplements" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Supplements</div>
-                <Button variant="contained" color="primary" onClick={handleCreatePlan}>Add a Nutrition Plan</Button>
+                <Button variant="contained" color="primary" onClick={handleCreate}>Add a Supplement</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>

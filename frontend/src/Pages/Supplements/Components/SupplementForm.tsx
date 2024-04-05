@@ -4,11 +4,20 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 interface SupplementItem {
     supplement_id: number;
-    name: string;
-    quantity: number;
-    protein: number;
-    fat: number;
-    carb: number;
+    product_name: string;
+    product_category: string;
+    product_description: string;
+    brand_name: string;
+    link:string;
+    price:number;
+    price_per_serving:number;
+    overall_rating:number;
+    number_of_reviews: number;
+    verified_buyer_rating: number;
+    verified_buyer_number: number;
+    top_flavor_rated: string;
+    number_of_flavors: number;
+    average_flavor_rating: number;
 }
 
 interface Props {
@@ -18,26 +27,37 @@ interface Props {
 }
 
 const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
-    const [name, setName] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [protein, setProtein] = useState("");
-    const [fat, setFat] = useState("");
-    const [carb, setCarb] = useState("");
+    const [productName, setProductName] = useState("");
+    const [productCategory, setProductCategory] = useState("");
+    const [description, setDescription] = useState("");
+    const [brandName, setBrandName] = useState("");
+    const [link, setLink] = useState("");
+    const [price, setPrice] = useState("");
+    const [pricePerServing, setPricePerServing] = useState("");
 
     useEffect(() => {
         if (open) {
-            setName("");
+            setProductName("");
         }
     }, [open]);
 
     const handleCreatePlanSubmit = () => {
         const supplement: SupplementItem = {
             supplement_id: 0, //TODO: figure out a way for this to not be here
-            name: name,
-            quantity: Number(quantity),
-            protein: Number(protein),
-            fat: Number(fat),
-            carb: Number(carb)
+            product_name: productName,
+            product_category: productCategory,
+            product_description: description,
+            brand_name: brandName,
+            link: link,
+            price: Number(price),
+            price_per_serving:Number(pricePerServing),
+            overall_rating:0,
+            number_of_reviews: 0,
+            verified_buyer_rating: 0,
+            verified_buyer_number: 0,
+            top_flavor_rated: "",
+            number_of_flavors: 0,
+            average_flavor_rating: 0,
         };
 
         console.log(supplement);
@@ -74,41 +94,41 @@ const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                 },
             },
         }}>
-            <DialogTitle>Add a Nutrition Plan</DialogTitle>
+            <DialogTitle>Add a Supplement</DialogTitle>
             <DialogContent>
                 <div>
-                    <label htmlFor="name">Diet Type:</label>
+                    <label htmlFor="name">Supplement Name:</label>
                     <input
                         type="text"
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => setProductName(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="quantity">Calorie Goal:</label>
+                    <label htmlFor="category">Category:</label>
                     <input
                         type="text"
-                        onChange={(e) => setQuantity(e.target.value)}
+                        onChange={(e) => setProductCategory(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="protein">Protein Goal:</label>
+                    <label htmlFor="description">Description:</label>
                     <input
                         type="number"
-                        onChange={(e) => setProtein(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="fat">Fat Goal:</label>
+                    <label htmlFor="brandName">Brand Name:</label>
                     <input
                         type="text"
-                        onChange={(e) => setFat(e.target.value)}
+                        onChange={(e) => setBrandName(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="carb">Fat Goal:</label>
+                    <label htmlFor="link">Link:</label>
                     <input
                         type="text"
-                        onChange={(e) => setCarb(e.target.value)}
+                        onChange={(e) => setLink(e.target.value)}
                     />
                 </div>
             </DialogContent>

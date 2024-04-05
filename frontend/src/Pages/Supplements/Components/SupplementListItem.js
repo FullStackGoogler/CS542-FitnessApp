@@ -22,12 +22,15 @@ const SupplementListItem = ({ supplement, onClick}) => {
                     ) : (
                         <StarBorderIcon style={{ color: '#D1B000' }} onClick={handleStarClick} />
                     )}
-                    <span style={styles.title}>{supplement.name}</span>
+                    <span style={styles.title}>{supplement.product_name}</span>
                 </div>
-                <ListItemText primary= {'Quantity: ' + supplement.quantity + ' g'}/>
-                <ListItemText primary= {'Protein: ' + supplement.protein + ' g'}/>
-                <ListItemText primary={'Fat: ' + supplement.fat + ' g'} />
-                <ListItemText primary={'Carb: ' + supplement.carb + ' g'} />
+                <ListItemText primary= {'Category: ' + supplement.product_category}/>
+                <ListItemText primary= {'Description: ' + supplement.product_description}/>
+                <ListItemText primary={'Brand Name: ' + supplement.brand_name} />
+                <ListItemText primary={'Link: ' + supplement.link} />
+                <ListItemText primary= {'Price: ' + supplement.price}/>
+                <ListItemText primary={'Overall Rating: ' + supplement.overall_rating} />
+                <ListItemText primary={'Top Flavor Rated: ' + supplement.top_flavor_rated} />
             </div>
         </ListItem>
     );

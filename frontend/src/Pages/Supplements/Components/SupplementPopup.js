@@ -15,16 +15,34 @@ const SupplementPopup = ({ selectedSupplement, onClose }) => {
               },
             },
           }}>
-            <DialogTitle>{selectedSupplement.diet_type}</DialogTitle>
+            <DialogTitle>{selectedSupplement.product_name}</DialogTitle>
             <DialogContent >
                 <DialogContentText>
-                    Calorie Goal : {selectedSupplement.calorie_goal} g
+                    Category : {selectedSupplement.product_category}
                     <br />
-                    Protein Goal: {selectedSupplement.protein_goal} g
+                    {'Description:' + selectedSupplement.product_description}
                     <br />
-                    Fat Goal: {selectedSupplement.fat_goal} g
+                    {'Brand Name: ' + selectedSupplement.brand_name}
                     <br />
-                    Carb Goal: {selectedSupplement.carb_goal} g
+                    {'Link: ' + selectedSupplement.link}
+                    <br />
+                    {'Price: ' + selectedSupplement.price}
+                    <br />
+                    {'Price per serving: ' + selectedSupplement.price_per_serving}
+                    <br />
+                    {'Overall Rating: ' + selectedSupplement.overall_rating}
+                    <br />
+                    {'Number of Reviews: ' + selectedSupplement.number_of_reviews}
+                    <br />
+                    {'Verified Buyer Rating: ' + selectedSupplement.verified_buyer_rating}
+                    <br />
+                    {'Verified Buyer Number: ' + selectedSupplement.verified_buyer_number}
+                    <br />
+                    {'Top Flavor Rated: ' + selectedSupplement.top_flavor_rated}
+                    <br />
+                    {'Number of Flavors: ' + selectedSupplement.number_of_flavors}
+                    <br />
+                    {'Average Flavor Rating: ' + selectedSupplement.average_flavor_rating}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
