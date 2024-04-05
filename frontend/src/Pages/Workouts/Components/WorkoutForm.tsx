@@ -68,7 +68,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
         }
     };
 
-    const handleCreateProgramSubmit = () => {
+    const handleProgramSubmit = () => {
         const workoutItem: WorkoutItem = {
             userProgramID: 100, //TODO: Figure out how to create a unique ID
             userProgramName: programName,
@@ -140,6 +140,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     fullWidth
                     value={programName}
                     onChange={(e) => setProgramName(e.target.value)}
+                    style={{ marginBottom: '1em' }}
                 />
                 <TextField
                     label="Program Description"
@@ -148,17 +149,38 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     rows={4}
                     value={programDescription}
                     onChange={(e) => setProgramDescription(e.target.value)}
+                    style={{ marginBottom: '1em' }}
                 />
                 <TextField
                     label="Image URL"
                     fullWidth
                     value={imageURL}
                     onChange={(e) => setImageURL(e.target.value)}
+                    style={{ marginBottom: '1em' }}
                 />
+                <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Days per Week</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={daysPerWeek ?? ''}
+                            label="Age"
+                        >
+                        {[...Array(7)].map((_, index) => (
+                            <MenuItem key={index} value={index + 1}>
+                                {index + 1}
+                            </MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
+                </Box>
                 <Box mt={2}>
                     <FormControl fullWidth>
-                        <InputLabel>Days per Week</InputLabel>
+                        <InputLabel id="daysPerWeek-label">Days per Week</InputLabel>
                         <Select
+                            labelId="daysPerWeek-label"
+                            id="daysPerWeek"
                             value={daysPerWeek ?? ''}
                             onChange={(e) => handleDaysPerWeekChange(parseInt(e.target.value.toString()))}
                         >
@@ -282,7 +304,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCreateProgramSubmit}>Create Program</Button>
+                <Button onClick={handleProgramSubmit}>Create Program</Button>
             </DialogActions>
         </Dialog>
     );    
