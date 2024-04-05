@@ -114,15 +114,6 @@ const NutritionPlanPage: React.FC = () => {
             <NutritionPlanPopup selectedNutritionPlan={selectedNutritionPlan} onClose={handleClose} />
 
             <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} />
-
-            <Dialog open={confirmDiscardForm} onClose={() => setConfirmDiscardForm(false)}>
-                <DialogTitle>Do you want to discard changes?</DialogTitle>
-                <DialogContent>Warning: Closing this tab will delete any progress made.</DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleDiscardFormClose(true)}>Yes</Button>
-                    <Button onClick={() => handleDiscardFormClose(false)}>No</Button>
-                </DialogActions>
-            </Dialog>
         </div>
     );
 }    

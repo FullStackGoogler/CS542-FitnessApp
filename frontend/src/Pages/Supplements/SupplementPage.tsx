@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { List, ListItemButton, Button } from "@mui/material";
 import ListItem  from "./Components/SupplementListItem"
 
-//TODO put in Supplement plan page not Supplement
 import SupplementPopup from "./Components/SupplementPopup"
 import SupplementForm from "./Components/SupplementForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
@@ -29,7 +28,7 @@ const SupplementPage: React.FC = () => {
 
     const [selectedSupplement, setSelectedSupplement] = useState<SupplementItem | null>(null);
     const [supplement, setSupplement] = useState<SupplementItem[]>([]);
-    const [createPlan, setCreatePlan] = useState(false);
+    const [createSupplement, setCreateSupplement] = useState(false);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
     
     /*let dummydata = [{
@@ -55,22 +54,22 @@ const SupplementPage: React.FC = () => {
             .then(response => response.json())
             .then(data =>  {
                 //console.log("data")
-                setSupplement(data.map((plan: any) => ({
-                    supplementid: plan.supplementid,
-                    product_name: plan.product_name,
-                    product_category: plan.product_category,
-                    product_description: plan.product_description,
-                    brand_name: plan.brand_name,
-                    link:plan.link,
-                    price:plan.price,
-                    price_per_serving:plan.price_per_serving,
-                    overall_rating:plan.overall_rating,
-                    number_of_reviews: plan.number_of_reviews,
-                    verified_buyer_rating: plan.verified_buyer_rating,
-                    verified_buyer_number: plan.verified_buyer_number,
-                    top_flavor_rated: plan.top_flavor_rated,
-                    number_of_flavors: plan.number_of_flavors,
-                    average_flavor_rating: plan.average_flavor_rating
+                setSupplement(data.map((supplement: any) => ({
+                    supplementid: supplement.supplementid,
+                    product_name: supplement.product_name,
+                    product_category: supplement.product_category,
+                    product_description: supplement.product_description,
+                    brand_name: supplement.brand_name,
+                    link:supplement.link,
+                    price:supplement.price,
+                    price_per_serving:supplement.price_per_serving,
+                    overall_rating:supplement.overall_rating,
+                    number_of_reviews: supplement.number_of_reviews,
+                    verified_buyer_rating: supplement.verified_buyer_rating,
+                    verified_buyer_number: supplement.verified_buyer_number,
+                    top_flavor_rated: supplement.top_flavor_rated,
+                    number_of_flavors: supplement.number_of_flavors,
+                    average_flavor_rating: supplement.average_flavor_rating
                 })));
             }).catch(error => console.error('Error:', error));
 
@@ -93,13 +92,13 @@ const SupplementPage: React.FC = () => {
     };
 
     const handleCreate = () => {
-        setCreatePlan(true);
+        setCreateSupplement(true);
     };
 
-    const handleCreateSubmit = (supplement: SupplementItem) => {
+    const handleCreateSubmit = (supplementItem: SupplementItem) => {
         //TODO: Figure out how to decompoes this interface into SQL queries
-        console.log("Supplement:", supplement);
-        setCreatePlan(false);
+        console.log("Supplement:", supplementItem);
+        setCreateSupplement(false);
     }
 
     const handleCreateClose = () => {
@@ -108,7 +107,7 @@ const SupplementPage: React.FC = () => {
 
     const handleDiscardFormClose = (discard: boolean) => {
         if (discard) {
-            setCreatePlan(false);
+            setCreateSupplement(false);
         }
         setConfirmDiscardForm(false);
     };
@@ -131,6 +130,8 @@ const SupplementPage: React.FC = () => {
                 </List>
             </div>
             <SupplementPopup selectedSupplement={selectedSupplement} onClose={handleClose} />
+
+            <SupplementForm open={createSupplement} onClose={handleCreateClose} onSubmit={handleCreateSubmit} />
         </div>
     );
 }    

@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, S
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface SupplementItem {
-    supplement_id: number;
+    supplementid: number;
     product_name: string;
     product_category: string;
     product_description: string;
@@ -43,7 +43,7 @@ const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
 
     const handleCreatePlanSubmit = () => {
         const supplement: SupplementItem = {
-            supplement_id: 0, //TODO: figure out a way for this to not be here
+            supplementid: 0, //TODO: figure out a way for this to not be here
             product_name: productName,
             product_category: productCategory,
             product_description: description,
