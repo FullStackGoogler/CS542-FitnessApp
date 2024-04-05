@@ -158,27 +158,11 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     onChange={(e) => setImageURL(e.target.value)}
                     style={{ marginBottom: '1em' }}
                 />
-                <Box sx={{ minWidth: 120 }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Days per Week</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={daysPerWeek ?? ''}
-                            label="Age"
-                        >
-                        {[...Array(7)].map((_, index) => (
-                            <MenuItem key={index} value={index + 1}>
-                                {index + 1}
-                            </MenuItem>
-                        ))}
-                        </Select>
-                    </FormControl>
-                </Box>
                 <Box mt={2}>
                     <FormControl fullWidth>
                         <InputLabel id="daysPerWeek-label">Days per Week</InputLabel>
                         <Select
+                            label="Days per Week"
                             labelId="daysPerWeek-label"
                             id="daysPerWeek"
                             value={daysPerWeek ?? ''}
