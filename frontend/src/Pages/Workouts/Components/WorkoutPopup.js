@@ -24,7 +24,7 @@ const WorkoutPopup = ({ selectedWorkout, onClose }) => {
         activities: workout.activities.sort((a, b) => a.position - b.position)
     }));
 
-    //Merge sorted real Workouts and dummy Rest Days
+    //Merge sorted real Workouts and dummy Rest Days and sort by workout position
     const allWorkouts = [...sortedWorkouts, ...restDays].sort((a,b) => a.workoutPosition - b.workoutPosition)
 
     return (

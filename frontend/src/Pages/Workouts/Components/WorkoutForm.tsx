@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton, Typography, Grid, Box, Divider } from "@mui/material";
+
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface WorkoutItem { //Define interface for a singular complete User Program
@@ -131,119 +132,112 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
     };
 
     return (
-        <Dialog open={open} onClose={onClose} sx={{
-            "& .MuiDialog-container": {
-                "& .MuiPaper-root": {
-                    width: "100%",
-                    maxWidth: "600px",
-                },
-            },
-        }}>
+        <Dialog open={open} onClose={onClose} maxWidth="md">
             <DialogTitle>Add a Program</DialogTitle>
             <DialogContent>
-                <div>
-                    <label htmlFor="userProgramName">Program Name:</label>
-                    <input
-                        type="text"
-                        id="userProgramName"
-                        name="userProgramName"
-                        value={programName}
-                        onChange={(e) => {
-                            setProgramName(e.target.value);
-                        }}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="userProgramDescription">Program Description:</label>
-                    <input
-                        type="text"
-                        id="userProgramDescription"
-                        name="userProgramDescription"
-                        value={programDescription}
-                        onChange={(e) => setProgramDescription(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="imageURL">Image URL:</label>
-                    <input
-                        type="text"
-                        id="imageURL"
-                        name="imageURL"
-                        value={imageURL}
-                        onChange={(e) => setImageURL(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="daysPerWeek">Days per Week:</label>
-                    <select id="daysPerWeek" name="daysPerWeek" value={daysPerWeek ?? ''} onChange={(e) => handleDaysPerWeekChange(parseInt(e.target.value))}>
-                        {[...Array(7)].map((_, index) => (
-                            <option key={index} value={index + 1}>
-                                {index + 1}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <TextField
+                    label="Program Name"
+                    fullWidth
+                    value={programName}
+                    onChange={(e) => setProgramName(e.target.value)}
+                />
+                <TextField
+                    label="Program Description"
+                    fullWidth
+                    multiline
+                    rows={4}
+                    value={programDescription}
+                    onChange={(e) => setProgramDescription(e.target.value)}
+                />
+                <TextField
+                    label="Image URL"
+                    fullWidth
+                    value={imageURL}
+                    onChange={(e) => setImageURL(e.target.value)}
+                />
+                <Box mt={2}>
+                    <FormControl fullWidth>
+                        <InputLabel>Days per Week</InputLabel>
+                        <Select
+                            value={daysPerWeek ?? ''}
+                            onChange={(e) => handleDaysPerWeekChange(parseInt(e.target.value.toString()))}
+                        >
+                            {[...Array(7)].map((_, index) => (
+                                <MenuItem key={index} value={index + 1}>
+                                    {index + 1}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
                 {daysPerWeek && (
-                    <div>
+                    <>
                         {workouts.map((workout, index) => (
                             <div key={index}>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label htmlFor={`workoutName${index}`}>Workout Name for Day {index + 1}:</label>
-                                    <input
-                                        type="text"
-                                        id={`workoutName${index}`}
-                                        name={`workoutName${index}`}
+                                <Divider style={{ margin: '20px 0' }} />
+                                <Box
+                                    component="form"
+                                    sx={{
+                                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                    }}
+                                    noValidate
+                                    autoComplete="off"
+                                >
+                                    <TextField
+                                        label={`Workout Name for Day ${index + 1}`}
+                                        fullWidth
                                         value={workout.workoutName}
                                         onChange={(e) => handleWorkoutNameChange(index, e.target.value)}
                                     />
-                                </div>
-                                <div>
-                                    <label htmlFor={`targetGroup${index}`}>Target Group for Day {index + 1}:</label>
-                                    <input
-                                        type="text"
-                                        id={`targetGroup${index}`}
-                                        name={`targetGroup${index}`}
+                                    <TextField
+                                        label={`Target Group for Day ${index + 1}`}
+                                        fullWidth
                                         value={workout.targetGroup}
                                         onChange={(e) => handleTargetGroupChange(index, e.target.value)}
                                     />
-                                </div>
-                                <div>
-                                    <Button onClick={() => handleAddExercise(index)}>Add Exercise</Button>
-                                    {workout.activities.map((activity, activityIndex) => (
-                                        <div key={activityIndex} style={{ marginBottom: '1rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                <FormControl sx={{ minWidth: 120 }}>
-                                                    <InputLabel id={`exercise-label-${activityIndex}`}>Exercise</InputLabel>
-                                                    <Select
-                                                        labelId={`exercise-label-${activityIndex}`}
-                                                        id={`exercise-${activityIndex}`}
-                                                        value={activity.exerciseID}
-                                                        onChange={(e) => {
-                                                            const updatedWorkouts = [...workouts];
-                                                            updatedWorkouts[index].activities[activityIndex].exerciseID = e.target.value as number;
-                                                            setWorkouts(updatedWorkouts);
-                                                        }}
-                                                    >
-                                                        {exercises.map((exercise) => (
-                                                            <MenuItem
-                                                                key={exercise.exercise_id}
-                                                                value={exercise.exercise_id}
-                                                            >
-                                                                {exercise.exercise_name}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </div>
-                                            <TextField
-                                                label="Reps"
-                                                type="number"
-                                                value={activity.reps}
+                                </Box>
+
+                                <Button onClick={() => handleAddExercise(index)}>Add Exercise</Button>
+                                {workout.activities.map((activity, activityIndex) => (
+                                    <div key={activityIndex}>
+                                        <Divider style={{ margin: '10px 0' }} />
+                                        <FormControl fullWidth>
+                                            <InputLabel>Exercise</InputLabel>
+                                            <Select
+                                                value={activity.exerciseID}
                                                 onChange={(e) => {
                                                     const updatedWorkouts = [...workouts];
-                                                    updatedWorkouts[index].activities[activityIndex].reps = parseInt(e.target.value);
+                                                    updatedWorkouts[index].activities[activityIndex].exerciseID = e.target.value as number;
                                                     setWorkouts(updatedWorkouts);
                                                 }}
+                                            >
+                                                {exercises.map((exercise) => (
+                                                    <MenuItem
+                                                        key={exercise.exercise_id}
+                                                        value={exercise.exercise_id}
+                                                    >
+                                                        {exercise.exercise_name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        <Box
+                                            component="form"
+                                            sx={{
+                                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                            }}
+                                            noValidate
+                                            autoComplete="off"
+                                        >
+                                            <TextField
+                                            label="Reps"
+                                            type="number"
+                                            value={activity.reps}
+                                            onChange={(e) => {
+                                                const updatedWorkouts = [...workouts];
+                                                updatedWorkouts[index].activities[activityIndex].reps = parseInt(e.target.value);
+                                                setWorkouts(updatedWorkouts);
+                                            }}
                                             />
                                             <TextField
                                                 label="Sets"
@@ -278,19 +272,20 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                             <IconButton aria-label="delete" onClick={() => handleDeleteExercise(index, activityIndex)}>
                                                 <DeleteIcon />
                                             </IconButton>
-                                        </div>
-                                    ))}
-                                </div>
+                                        </Box>
+                                        
+                                    </div>
+                                ))}
                             </div>
                         ))}
-                    </div>
+                    </>
                 )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCreateProgramSubmit}>Create Program</Button>
             </DialogActions>
         </Dialog>
-    );
+    );    
 };
 
 export default WorkoutForm;
