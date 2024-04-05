@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton, Typography, Grid, Box, Divider } from "@mui/material";
-
+import Autocomplete from '@mui/material/Autocomplete';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface WorkoutItem { //Define interface for a singular complete User Program
@@ -140,7 +140,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     fullWidth
                     value={programName}
                     onChange={(e) => setProgramName(e.target.value)}
-                    style={{ marginBottom: '1em' }}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
                 <TextField
                     label="Program Description"
@@ -158,24 +158,22 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     onChange={(e) => setImageURL(e.target.value)}
                     style={{ marginBottom: '1em' }}
                 />
-                <Box mt={2}>
-                    <FormControl fullWidth>
-                        <InputLabel id="daysPerWeek-label">Days per Week</InputLabel>
-                        <Select
-                            label="Days per Week"
-                            labelId="daysPerWeek-label"
-                            id="daysPerWeek"
-                            value={daysPerWeek ?? ''}
-                            onChange={(e) => handleDaysPerWeekChange(parseInt(e.target.value.toString()))}
-                        >
-                            {[...Array(7)].map((_, index) => (
-                                <MenuItem key={index} value={index + 1}>
-                                    {index + 1}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Box>
+                <FormControl fullWidth>
+                    <InputLabel id="daysPerWeek-label">Days per Week</InputLabel>
+                    <Select
+                        label="Days per Week"
+                        labelId="daysPerWeek-label"
+                        id="daysPerWeek"
+                        value={daysPerWeek ?? ''}
+                        onChange={(e) => handleDaysPerWeekChange(parseInt(e.target.value.toString()))}
+                    >
+                        {[...Array(7)].map((_, index) => (
+                            <MenuItem key={index} value={index + 1}>
+                                {index + 1}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 {daysPerWeek && (
                     <>
                         {workouts.map((workout, index) => (
@@ -207,9 +205,17 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                 {workout.activities.map((activity, activityIndex) => (
                                     <div key={activityIndex}>
                                         <Divider style={{ margin: '10px 0' }} />
+                                        <Autocomplete
+                                            disablePortal
+                                            id="combo-box-demo"
+                                            options={exercises}
+                                            sx={{ width: 300 }}
+                                            renderInput={(params) => <TextField {...params} label="Exercise" />}
+                                        />
                                         <FormControl fullWidth>
                                             <InputLabel>Exercise</InputLabel>
                                             <Select
+                                                label="Exercise"
                                                 value={activity.exerciseID}
                                                 onChange={(e) => {
                                                     const updatedWorkouts = [...workouts];
