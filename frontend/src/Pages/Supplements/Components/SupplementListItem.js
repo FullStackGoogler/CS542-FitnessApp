@@ -24,13 +24,13 @@ const SupplementListItem = ({ supplement, onClick}) => {
                     )}
                     <span style={styles.title}>{supplement.product_name}</span>
                 </div>
-                <ListItemText primary= {'Category: ' + supplement.product_category}/>
                 <ListItemText primary= {'Description: ' + supplement.product_description}/>
-                <ListItemText primary={'Brand Name: ' + supplement.brand_name} />
-                <ListItemText primary={'Link: ' + supplement.link} />
-                <ListItemText primary= {'Price: ' + supplement.price}/>
-                <ListItemText primary={'Overall Rating: ' + supplement.overall_rating} />
-                <ListItemText primary={'Top Flavor Rated: ' + supplement.top_flavor_rated} />
+                <ListItemText secondary= {'Category: ' + supplement.product_category}/>
+                <ListItemText secondary={'Brand Name: ' + supplement.brand_name} />
+                <ListItemText secondary={'Link: ' + supplement.link} />
+                <ListItemText secondary= {'Price: ' + supplement.price}/>
+                <ListItemText secondary={'Overall Rating: ' + supplement.overall_rating} />
+                <ListItemText secondary={'Top Flavor Rated: ' + supplement.top_flavor_rated} />
             </div>
         </ListItem>
     );

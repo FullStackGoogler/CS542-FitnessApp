@@ -76,41 +76,41 @@ const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
         }}>
             <DialogTitle>Add a Nutrition Plan</DialogTitle>
             <DialogContent>
-                <div>
-                    <label htmlFor="diet_type">Diet Type:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setDietType(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="calorie_goal">Calorie Goal:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setCalorieGoal(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="protein_goal">Protein Goal:</label>
-                    <input
-                        type="number"
-                        onChange={(e) => setProteinGoal(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="fat_goal">Fat Goal:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setFatGoal(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="carb_goal">Carb Goal:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setCarbGoal(e.target.value)}
-                    />
-                </div>
+                <TextField
+                    label="Diet Type"
+                    fullWidth
+                    value={dietType}
+                    onChange={(e) => setDietType(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Calorie Goal"
+                    fullWidth
+                    value={calorieGoal}
+                    onChange={(e) => setCalorieGoal(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Protein Goal"
+                    fullWidth
+                    value={proteinGoal}
+                    onChange={(e) => setProteinGoal(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Fat Goal"
+                    fullWidth
+                    value={fatGoal}
+                    onChange={(e) => setFatGoal(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Carb Goal"
+                    fullWidth
+                    value={carbGoal}
+                    onChange={(e) => setCarbGoal(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCreatePlanSubmit}>Create Program</Button>

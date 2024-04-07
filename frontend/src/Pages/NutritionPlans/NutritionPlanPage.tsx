@@ -41,7 +41,7 @@ const NutritionPlanPage: React.FC = () => {
 ]*/
    
     useEffect(() => {
-        fetch('http://localhost:8080/api/nutritionplan')
+        fetch('http://localhost:9000/api/nutritionplan')
             .then(response => response.json())
             .then(data =>  {
                 //console.log("data")
@@ -60,7 +60,7 @@ const NutritionPlanPage: React.FC = () => {
     const handleClick = (item: NutritionPlanItem) => {
         setSelectedNutritionPlan(item);
         console.log(item.nutrition_plan_id);
-        fetch(`http://localhost:8080/api/nutritionplan/${item.nutrition_plan_id}`)
+        fetch(`http://localhost:9000/api/nutritionplan/${item.nutrition_plan_id}`)
             .then(response => response.json())
             .then(nutritionPlanData => {
                     console.log(nutritionPlanData)

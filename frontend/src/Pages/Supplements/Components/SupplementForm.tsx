@@ -34,6 +34,13 @@ const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
     const [link, setLink] = useState("");
     const [price, setPrice] = useState("");
     const [pricePerServing, setPricePerServing] = useState("");
+    const [overallRating, setOverallRating] = useState("");
+    const [numberOfReviews, setNumberOfReviews] = useState("");
+    const [verifiedBuyerRating, setVerifiedBuyerRating] = useState("");
+    const [verifiedBuyerNumber, setVerifiedBuyerNumber] = useState("");
+    const [topFlavorRated, setTopFlavorRated] = useState("");
+    const [numberOfFlavors, setNumberOfFlavors] = useState("");
+    const [averageFlavorRating, setAverageFlavorRating] = useState("");
 
     useEffect(() => {
         if (open) {
@@ -51,13 +58,13 @@ const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
             link: link,
             price: Number(price),
             price_per_serving:Number(pricePerServing),
-            overall_rating:0,
-            number_of_reviews: 0,
-            verified_buyer_rating: 0,
-            verified_buyer_number: 0,
-            top_flavor_rated: "",
-            number_of_flavors: 0,
-            average_flavor_rating: 0,
+            overall_rating: Number(overallRating),
+            number_of_reviews: Number(numberOfReviews),
+            verified_buyer_rating: Number(verifiedBuyerRating),
+            verified_buyer_number: Number(verifiedBuyerNumber),
+            top_flavor_rated: topFlavorRated,
+            number_of_flavors: Number(numberOfFlavors),
+            average_flavor_rating: Number(averageFlavorRating),
         };
 
         console.log(supplement);
@@ -96,41 +103,104 @@ const SupplementForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
         }}>
             <DialogTitle>Add a Supplement</DialogTitle>
             <DialogContent>
-                <div>
-                    <label htmlFor="name">Supplement Name:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setProductName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="category">Category:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setProductCategory(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="description">Description:</label>
-                    <input
-                        type="number"
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="brandName">Brand Name:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setBrandName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="link">Link:</label>
-                    <input
-                        type="text"
-                        onChange={(e) => setLink(e.target.value)}
-                    />
-                </div>
+                <TextField
+                    label="Supplement Name"
+                    fullWidth
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Category"
+                    fullWidth
+                    value={productCategory}
+                    onChange={(e) => setProductCategory(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Description"
+                    fullWidth
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Brand name"
+                    fullWidth
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Link"
+                    fullWidth
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Price"
+                    fullWidth
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Price"
+                    fullWidth
+                    value={pricePerServing}
+                    onChange={(e) => setPricePerServing(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Overall Rating"
+                    fullWidth
+                    value={overallRating}
+                    onChange={(e) => setOverallRating(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Number of Reviews"
+                    fullWidth
+                    value={numberOfReviews}
+                    onChange={(e) => setNumberOfReviews(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Verified Buyer Rating"
+                    fullWidth
+                    value={verifiedBuyerRating}
+                    onChange={(e) => setVerifiedBuyerRating(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Verified Buyer Number"
+                    fullWidth
+                    value={verifiedBuyerNumber}
+                    onChange={(e) => setVerifiedBuyerNumber(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Top Flavor Rated"
+                    fullWidth
+                    value={topFlavorRated}
+                    onChange={(e) => setTopFlavorRated(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Number of Flavors"
+                    fullWidth
+                    value={numberOfFlavors}
+                    onChange={(e) => setNumberOfFlavors(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
+                <TextField
+                    label="Average Flavor Rating"
+                    fullWidth
+                    value={averageFlavorRating}
+                    onChange={(e) => setAverageFlavorRating(e.target.value)}
+                    style={{ marginTop: '1rem', marginBottom: '1em' }}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCreatePlanSubmit}>Create Program</Button>

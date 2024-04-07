@@ -24,7 +24,7 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
                     )}
                     <span style={styles.title}>{nutritionPlan.diet_type}</span>
                 </div>
-                <ListItemText primary= {'Calorie goal: ' + nutritionPlan.calorie_goal + ' g'}/>
+                <ListItemText primary= {'Calorie goal: ' + nutritionPlan.calorie_goal + ' Calories'}/>
                 <ListItemText primary= {'Protein goal: ' + nutritionPlan.protein_goal + ' g'}/>
                 <ListItemText primary={'Fat goal: ' + nutritionPlan.fat_goal + ' g'} />
                 <ListItemText primary={'Carb goal: ' + nutritionPlan.carb_goal + ' g'} />

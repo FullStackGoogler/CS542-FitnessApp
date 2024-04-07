@@ -50,7 +50,7 @@ const SupplementPage: React.FC = () => {
 ]*/
    
     useEffect(() => {
-        fetch('http://localhost:8080/api/supplements')
+        fetch('http://localhost:9000/api/supplements')
             .then(response => response.json())
             .then(data =>  {
                 //console.log("data")
@@ -78,7 +78,7 @@ const SupplementPage: React.FC = () => {
     const handleClick = (item: SupplementItem) => {
         setSelectedSupplement(item);
         console.log(item.supplementid);
-        fetch(`http://localhost:8080/api/supplements/${item.supplementid}`)
+        fetch(`http://localhost:9000/api/supplements/${item.supplementid}`)
             .then(response => response.json())
             .then(SupplementData => {
                     console.log(SupplementData)
