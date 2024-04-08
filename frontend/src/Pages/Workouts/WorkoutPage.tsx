@@ -40,7 +40,7 @@ const WorkoutPage: React.FC = () => {
     
     //Fetch all User Programs on page load
     useEffect(() => {
-        fetch('http://localhost:8080/api/userprograms')
+        fetch('http://localhost:9000/api/userprograms')
             .then(response => response.json())
             .then(data => {
                 setUserPrograms(data.map((program: any) => ({
@@ -60,7 +60,7 @@ const WorkoutPage: React.FC = () => {
     const handlePopupOpen = (item: WorkoutItem) => {
         setSelectedProgram(item);
 
-        fetch(`http://localhost:8080/api/userprogram/${item.userProgramID}/workouts`)
+        fetch(`http://localhost:9000/api/userprogram/${item.userProgramID}/workouts`)
             .then(response => response.json())
             .then(workoutData => {
                 const workoutsMap = new Map<number, any>();
