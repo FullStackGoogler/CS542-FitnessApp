@@ -16,6 +16,9 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false },
 });
 
+/*
+  API GET Endpoint for retrieving all data from the 'nutrition_plan' table.
+*/
 app.get('/api/nutritionplan', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM Nutrition_Plan');
@@ -27,6 +30,9 @@ app.get('/api/nutritionplan', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for retrieving all data from the 'supplements' table.
+*/
 app.get('/api/supplements', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM Supplements');
@@ -37,6 +43,9 @@ app.get('/api/supplements', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for retrieving all data from the 'exercise' table.
+*/
 app.get('/api/exercises', async (req, res) => {
     try {
       const result = await pool.query('SELECT * FROM Exercise');
@@ -47,6 +56,9 @@ app.get('/api/exercises', async (req, res) => {
     }
   });
 
+/*
+  API GET Endpoint fo retrieving all data from the 'userprogram' table.
+*/
 app.get('/api/userprograms', async (req, res) => {
   try {
     const result = await pool.query('SELECT usertable.username, userprogram.* FROM userprogram JOIN usertable ON userprogram.owner = usertable.userid');
@@ -57,6 +69,9 @@ app.get('/api/userprograms', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for retrieving the complete User Program data for a specified userprogramID value.
+*/
 app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
   const userProgramId = req.params.userProgramId;
 
@@ -64,41 +79,41 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
       const programQuery = {
           text: `
           SELECT 
-                  up.userprogramid,
-                  up.ispublic,
-                  up.num_days_per_week,
-                  up.user_program_name,
-                  up.user_program_desc,
-                  w.workout_id,
-                  w.workout_name,
-                  w.target_group,
-                  w.position AS workoutPosition,
-                  a.activity_id,
-                  a.reps,
-                  a.sets,
-                  a.rpe,
-                  a.rest,
-                  a.note,
-                  a.position,
-                  e.exercise_id,
-                  e.exercise_name,
-                  e.muscle_group,
-                  e.equipment,
-                  e.video,
-                  u.username
-              FROM 
-                  userprogram up
-              JOIN
-                  usertable u ON up.owner = u.userid
-              JOIN 
-                  workout w ON up.userprogramid = w.userprogram_id
-              JOIN 
-                  activity a ON w.workout_id = a.workout
-              JOIN 
-                  exercise e ON a.exercise = e.exercise_id
-              WHERE 
-                  up.userprogramid = $1
-          `,
+            up.userprogramid,
+            up.ispublic,
+            up.num_days_per_week,
+            up.user_program_name,
+            up.user_program_desc,
+            w.workout_id,
+            w.workout_name,
+            w.target_group,
+            w.position AS workoutPosition,
+            a.activity_id,
+            a.reps,
+            a.sets,
+            a.rpe,
+            a.rest,
+            a.note,
+            a.position,
+            e.exercise_id,
+            e.exercise_name,
+            e.muscle_group,
+            e.equipment,
+            e.video,
+            u.username
+          FROM 
+            userprogram up
+          JOIN
+            usertable u ON up.owner = u.userid
+          JOIN 
+            workout w ON up.userprogramid = w.userprogram_id
+          JOIN 
+            activity a ON w.workout_id = a.workout
+          JOIN 
+            exercise e ON a.exercise = e.exercise_id
+          WHERE 
+            up.userprogramid = $1
+            `,
           values: [userProgramId]
       };
 
@@ -110,6 +125,9 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
   }
 });
 
+/*
+  API POST Endpoint for inserting a complete User Program into the required tables.
+*/
 app.post('/api/workoutItem', async (req, res) => {
   const workoutItem = req.body;
 
@@ -161,6 +179,47 @@ app.post('/api/workoutItem', async (req, res) => {
 } finally {
     client.release();
 }
+});
+
+/*
+  API POST/DELETE Endpoint for adding/removing a User Program to the 'userfollowsuserprogram' table.
+*/
+app.post('/api/StarredWorkout', async (req, res) => {
+  const { userprogramid, isStarred, userId } = req.body;
+
+  try {
+      if (!userId) {
+          return res.status(400).json({ error: 'Invalid userID.' });
+      }
+
+      if (isStarred) {  
+          await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, userprogramid]);
+          res.status(200).json({ message: 'Successfully added a favorite UserProgram.' });
+      }
+      
+      if (!isStarred) {
+          await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, userprogramid]);
+          res.status(200).json({ message: 'Successfully deleted a favorite UserProgram.' });
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+/*
+  API GET Endpoint for fetching all 'userfollowsuserprogram' entries with a matching userID.
+*/
+app.get('/api/userfollowsuserprogram/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const result = await pool.query('SELECT * FROM userfollowsuserprogram WHERE userid = $1', [userId]);
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.listen(9000, () => {
