@@ -31,23 +31,23 @@ const WorkoutPopup = ({ selectedWorkout, onClose }) => {
         <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
             <DialogTitle>
                 <Typography variant="h5" component="div" style={{ fontWeight: "bold" }}>
-                {userProgramName}
+                    {userProgramName}
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <DialogContentText style={{ color: "rgba(0, 0, 0, 0.54)" }}>
+                <DialogContentText style={{ color: "#0000008a" }}>
                     {userProgramDescription}
                     <br/>
                     <br/>
                     Days per Week: {daysPerWeek}
                 </DialogContentText>
-            <Divider style={{ margin: "20px 0" }} />
             {allWorkouts.map(workout => (
                 <div key={workout.workoutID} style={{ marginBottom: "20px" }}>
+                    <Divider style={{ margin: "20px 0" }} />
                     <Typography variant="h6" component="div" style={{ fontWeight: "bold" }}>
                         Day {workout.workoutPosition}: {workout.workoutName}
                     </Typography>
-                    <Typography style={{ color: "rgba(0, 0, 0, 0.54)" }}>
+                    <Typography style={{ color: "#0000008a" }}>
                         Targeted Muscle Groups: {workout.targetGroup}
                     </Typography>
                         <div style={{ marginTop: "10px" }}>
@@ -56,13 +56,13 @@ const WorkoutPopup = ({ selectedWorkout, onClose }) => {
                                 <Typography style={{ textTransform: "capitalize" }}>
                                     {activity.position}: {activity.exerciseName}
                                 </Typography>
-                                <Typography style={{ marginTop: "5px", color: "rgba(0, 0, 0, 0.54)", textTransform: "capitalize" }}>
+                                <Typography style={{ marginTop: "5px", color: "#0000008a", textTransform: "capitalize" }}>
                                     Targeted Muscles: {activity.muscleGroup}
                                 </Typography>
-                                <Typography style={{ marginTop: "5px", color: "rgba(0, 0, 0, 0.54)" }}>
+                                <Typography style={{ marginTop: "5px", color: "#0000008a" }}>
                                     Additional Notes: {activity.notes}
                                 </Typography>
-                                <Typography style={{ marginTop: "5px", color: "rgba(0, 0, 0, 0.54)" }}>
+                                <Typography style={{ marginTop: "5px", color: "#0000008a" }}>
                                     {activity.reps} Reps | {activity.sets} Sets | RPE {activity.rpe} | Rest Time: {activity.restTime}
                                 </Typography>
                             </div>

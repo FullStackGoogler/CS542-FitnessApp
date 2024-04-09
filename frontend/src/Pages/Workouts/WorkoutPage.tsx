@@ -12,7 +12,7 @@ const WorkoutPage: React.FC = () => {
         userProgramID: number;
         userProgramName: string;
         userProgramDescription: string;
-        userProgramOwner: string;
+        userProgramOwner: number;
         daysPerWeek: number;
         image: string;
         workouts: {
@@ -22,7 +22,7 @@ const WorkoutPage: React.FC = () => {
             workoutPosition: number;
             activities: {
                 activityID: number;
-                exerciseName: number;
+                exerciseID: number;
                 muscleGroup: string;
                 reps: string;
                 sets: number;
@@ -49,7 +49,7 @@ const WorkoutPage: React.FC = () => {
                     userProgramDescription: program.user_program_desc,
                     userProgramOwner: program.username,
                     daysPerWeek: program.num_days_per_week,
-                    image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`, //TODO: Get better default image URL here
+                    image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`,
                     workouts: []
                 })));
             })
@@ -107,11 +107,30 @@ const WorkoutPage: React.FC = () => {
         setCreateProgram(true);
     };
 
-    const handleCreateProgramSubmit = (workoutItem: WorkoutItem) => {
-        //TODO: Figure out how to decompoes this interface into SQL queries
-        console.log("Workout Item:", workoutItem);
+    const handleCreateProgramSubmit = async (workoutItem: WorkoutItem) => {
+        //console.log("Workout Item:", workoutItem); //TODO: Debugging purposes
+        //console.log("Workout Stringed:", JSON.stringify(workoutItem)) //TODO: Debugging purposes
         setCreateProgram(false);
-    }
+
+        try {
+            const response = await fetch('http://localhost:9000/api/workoutItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(workoutItem)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('WorkoutItem successfully sent:', responseData);
+            } else {
+                console.error('Failed to send WorkoutItem:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error sending WorkoutItem:', error.message);
+        }
+    };
 
     return (
         <div>

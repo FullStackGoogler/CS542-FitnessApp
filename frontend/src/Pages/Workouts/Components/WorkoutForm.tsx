@@ -7,7 +7,7 @@ interface WorkoutItem { //Define interface for a singular complete User Program
     userProgramID: number;
     userProgramName: string;
     userProgramDescription: string;
-    userProgramOwner: string;
+    userProgramOwner: number;
     daysPerWeek: number;
     image: string;
     workouts: {
@@ -17,7 +17,7 @@ interface WorkoutItem { //Define interface for a singular complete User Program
         workoutPosition: number;
         activities: {
             activityID: number;
-            exerciseName: number;
+            exerciseID: number;
             muscleGroup: string;
             reps: string;
             sets: number;
@@ -60,7 +60,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
 
     const fetchExercises = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/exercises");
+            const response = await fetch("http://localhost:9000/api/exercises");
             const data = await response.json();
             setExercises(data);
         } catch (error) {
@@ -70,17 +70,17 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
 
     const handleProgramSubmit = () => {
         const workoutItem: WorkoutItem = {
-            userProgramID: 100, //TODO: Figure out how to create a unique ID
+            userProgramID: -1, //TODO: Figure out how to create a unique ID
             userProgramName: programName,
             userProgramDescription: programDescription,
-            userProgramOwner: 'AutoNerd', //TODO: Set to be currentUser.username somehow
+            userProgramOwner: 1, //TODO: Set to be currentUser.username somehow
             daysPerWeek: daysPerWeek!,
             image: imageURL,
             workouts: workouts.map((workout, index) => ({
                 workoutID: index, //TODO: Figure out how to create a unique ID
                 workoutName: workout.workoutName,
                 targetGroup: workout.targetGroup,
-                workoutPosition: index, //TODO: Check that this is correct
+                workoutPosition: index,
                 activities: workout.activities.map(activity => ({
                     ...activity,
                     exerciseID: parseInt(activity.exerciseID)
@@ -91,27 +91,17 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
         onClose(workoutItem);
     };
 
-    const handleWorkoutNameChange = (index: number, value: string) => {
-        const updatedWorkouts = [...workouts];
-        updatedWorkouts[index].workoutName = value;
-        setWorkouts(updatedWorkouts);
-    };
-
-    const handleTargetGroupChange = (index: number, value: string) => {
-        const updatedWorkouts = [...workouts];
-        updatedWorkouts[index].targetGroup = value;
-        setWorkouts(updatedWorkouts);
-    };
-
     const handleAddExercise = (index: number) => {
         const updatedWorkouts = [...workouts];
+        const newActivityPosition = updatedWorkouts[index].activities.length + 1;
         updatedWorkouts[index].activities.push({
             activityID: updatedWorkouts[index].activities.length,
             exerciseID: "",
             reps: 0,
             sets: 0,
             rpe: 0,
-            restTime: 0
+            restTime: 0,
+            position: newActivityPosition
         });
         setWorkouts(updatedWorkouts);
     };
@@ -124,11 +114,18 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
 
     const handleDaysPerWeekChange = (value: number) => {
         setDaysPerWeek(value);
-        setWorkouts([...Array(value)].map(() => ({
+        const newWorkouts = [...Array(value)].map((_, index) => ({
             workoutName: "",
             targetGroup: "",
+            workoutPosition: index + 1,
             activities: []
-        })));
+        }));
+        setWorkouts(newWorkouts);
+    };
+
+    //Helper function to make the list of Exercises look prettier
+    const capitalize = (str: string) => {
+        return str.replace(/\b\w/g, (char) => char.toUpperCase());
     };
 
     return (
@@ -179,113 +176,116 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                         {workouts.map((workout, index) => (
                             <div key={index}>
                                 <Divider style={{ margin: '20px 0' }} />
-                                <Box
-                                    component="form"
-                                    sx={{
-                                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                <TextField
+                                    label={`Workout Name for Day ${index + 1}`}
+                                    fullWidth
+                                    value={workout.workoutName}
+                                    onChange={(e) => {
+                                        const updatedWorkouts = [...workouts];
+                                        updatedWorkouts[index].workoutName = e.target.value;
+                                        setWorkouts(updatedWorkouts);
                                     }}
-                                    noValidate
-                                    autoComplete="off"
-                                >
-                                    <TextField
-                                        label={`Workout Name for Day ${index + 1}`}
-                                        fullWidth
-                                        value={workout.workoutName}
-                                        onChange={(e) => handleWorkoutNameChange(index, e.target.value)}
-                                    />
-                                    <TextField
-                                        label={`Target Group for Day ${index + 1}`}
-                                        fullWidth
-                                        value={workout.targetGroup}
-                                        onChange={(e) => handleTargetGroupChange(index, e.target.value)}
-                                    />
-                                </Box>
-
+                                    style={{ marginBottom: '1em' }}
+                                />
+                                <TextField
+                                    label={`Target Group for Day ${index + 1}`}
+                                    fullWidth
+                                    value={workout.targetGroup}
+                                    onChange={(e) => {
+                                        const updatedWorkouts = [...workouts];
+                                        updatedWorkouts[index].targetGroup = e.target.value;
+                                        setWorkouts(updatedWorkouts);
+                                    }}
+                                    style={{ marginBottom: '1em' }}
+                                />
                                 <Button onClick={() => handleAddExercise(index)}>Add Exercise</Button>
                                 {workout.activities.map((activity, activityIndex) => (
                                     <div key={activityIndex}>
                                         <Divider style={{ margin: '10px 0' }} />
                                         <Autocomplete
                                             disablePortal
-                                            id="combo-box-demo"
+                                            autoHighlight
+                                            id="exercise-selection"
                                             options={exercises}
-                                            sx={{ width: 300 }}
-                                            renderInput={(params) => <TextField {...params} label="Exercise" />}
-                                        />
-                                        <FormControl fullWidth>
-                                            <InputLabel>Exercise</InputLabel>
-                                            <Select
-                                                label="Exercise"
-                                                value={activity.exerciseID}
-                                                onChange={(e) => {
-                                                    const updatedWorkouts = [...workouts];
-                                                    updatedWorkouts[index].activities[activityIndex].exerciseID = e.target.value as number;
-                                                    setWorkouts(updatedWorkouts);
-                                                }}
-                                            >
-                                                {exercises.map((exercise) => (
-                                                    <MenuItem
-                                                        key={exercise.exercise_id}
-                                                        value={exercise.exercise_id}
-                                                    >
-                                                        {exercise.exercise_name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                        <Box
-                                            component="form"
-                                            sx={{
-                                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                            }}
-                                            noValidate
-                                            autoComplete="off"
-                                        >
-                                            <TextField
-                                            label="Reps"
-                                            type="number"
-                                            value={activity.reps}
-                                            onChange={(e) => {
+                                            getOptionLabel={(exercise) => capitalize(exercise.exercise_name)}
+                                            onChange={(e, newValue) => {
+                                                console.log(newValue)
                                                 const updatedWorkouts = [...workouts];
-                                                updatedWorkouts[index].activities[activityIndex].reps = parseInt(e.target.value);
+                                                updatedWorkouts[index].activities[activityIndex].exerciseID = newValue ? newValue.exercise_id : null;
+                                                console.log(updatedWorkouts[index].activities[activityIndex])
                                                 setWorkouts(updatedWorkouts);
                                             }}
-                                            />
-                                            <TextField
-                                                label="Sets"
-                                                type="number"
-                                                value={activity.sets}
-                                                onChange={(e) => {
-                                                    const updatedWorkouts = [...workouts];
-                                                    updatedWorkouts[index].activities[activityIndex].sets = parseInt(e.target.value);
-                                                    setWorkouts(updatedWorkouts);
-                                                }}
-                                            />
-                                            <TextField
-                                                label="RPE"
-                                                type="number"
-                                                value={activity.rpe}
-                                                onChange={(e) => {
-                                                    const updatedWorkouts = [...workouts];
-                                                    updatedWorkouts[index].activities[activityIndex].rpe = parseInt(e.target.value);
-                                                    setWorkouts(updatedWorkouts);
-                                                }}
-                                            />
-                                            <TextField
-                                                label="Rest Time"
-                                                type="number"
-                                                value={activity.restTime}
-                                                onChange={(e) => {
-                                                    const updatedWorkouts = [...workouts];
-                                                    updatedWorkouts[index].activities[activityIndex].restTime = parseInt(e.target.value);
-                                                    setWorkouts(updatedWorkouts);
-                                                }}
-                                            />
-                                            <IconButton aria-label="delete" onClick={() => handleDeleteExercise(index, activityIndex)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Box>
-                                        
+                                            renderInput={(params) => <TextField {...params} label="Exercises" />}
+                                            style={{ marginBottom: '1em' }}
+                                        />
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    fullWidth
+                                                    label="Reps"
+                                                    type="number"
+                                                    value={activity.reps}
+                                                    onChange={(e) => {
+                                                        const updatedWorkouts = [...workouts];
+                                                        updatedWorkouts[index].activities[activityIndex].reps = parseInt(e.target.value);
+                                                        setWorkouts(updatedWorkouts);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    fullWidth
+                                                    label="Sets"
+                                                    type="number"
+                                                    value={activity.sets}
+                                                    onChange={(e) => {
+                                                        const updatedWorkouts = [...workouts];
+                                                        updatedWorkouts[index].activities[activityIndex].sets = parseInt(e.target.value);
+                                                        setWorkouts(updatedWorkouts);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    fullWidth
+                                                    label="RPE"
+                                                    type="number"
+                                                    value={activity.rpe}
+                                                    onChange={(e) => {
+                                                        const updatedWorkouts = [...workouts];
+                                                        updatedWorkouts[index].activities[activityIndex].rpe = parseInt(e.target.value);
+                                                        setWorkouts(updatedWorkouts);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    fullWidth
+                                                    label="Rest Time"
+                                                    value={activity.restTime}
+                                                    onChange={(e) => {
+                                                        const updatedWorkouts = [...workouts];
+                                                        updatedWorkouts[index].activities[activityIndex].restTime = e.target.value;
+                                                        setWorkouts(updatedWorkouts);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <IconButton aria-label="delete" onClick={() => handleDeleteExercise(index, activityIndex)}>
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                            </Grid>
+                                        </Grid>
+                                        <TextField
+                                            label="Notes"
+                                            fullWidth
+                                            value={activity.notes}
+                                            onChange={(e) => {
+                                                const updatedWorkouts = [...workouts];
+                                                updatedWorkouts[index].activities[activityIndex].notes = e.target.value;
+                                                setWorkouts(updatedWorkouts);
+                                            }}
+                                        />
                                     </div>
                                 ))}
                             </div>
