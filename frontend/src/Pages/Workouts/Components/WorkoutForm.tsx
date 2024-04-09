@@ -77,7 +77,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
             daysPerWeek: daysPerWeek!,
             image: imageURL,
             workouts: workouts.map((workout, index) => ({
-                workoutID: index, //TODO: Figure out how to create a unique ID
+                workoutID: index + 1, //TODO: Figure out how to create a unique ID
                 workoutName: workout.workoutName,
                 targetGroup: workout.targetGroup,
                 workoutPosition: index,
