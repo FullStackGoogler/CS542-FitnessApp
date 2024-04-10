@@ -222,6 +222,39 @@ app.get('/api/userfollowsuserprogram/:userId', async (req, res) => {
   }
 });
 
+//insert Nutrition_Plan
+app.post('/api/nutritionPlanItem', async (req, res) => {
+  const nutritionPlanItem = req.body;
+
+  //console.log("Received workoutItem:", workoutItem); //TODO: Debugging purposes
+
+  res.status(200).json({ message: 'NutritionPlanItem received successfully.' });
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    //Insert UserProgram first, retrieve the UserProgramID
+    const insertNutritionPlanQuery = `
+        INSERT INTO nutrition_plan (nutrition_plan_id, calorie_goal, diet_type, protein_goal, fat_goal, carb_goal)
+        VALUES (true, $1, $2, $3, $4, $5)
+        RETURNING nutrition_plan_id
+    `;
+    const nutritionPlanValues = [nutritionPlanItem.nutrition_plan_id, nutritionPlanItem.calorie_goal, nutritionPlanItem.diet_type, nutritionPlanItem.protein_goal, nutritionPlanItem.fat_goal, nutritionPlanItem.carb_goal];
+    //const { rows } = await client.query(insertUserProgramQuery, userProgramValues);
+    //const nutritionPlanID = rows[0].nutrition_plan_id;
+    await client.query(insertNutritionPlanQuery, nutritionPlanValues);
+
+    await client.query('COMMIT');
+} catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+} finally {
+    client.release();
+}
+});
+
 app.listen(9000, () => {
   console.log('Server is running on port 9000');
 });

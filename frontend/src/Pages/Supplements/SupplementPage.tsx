@@ -1,11 +1,12 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, Button, Pagination } from "@mui/material";
 import ListItem  from "./Components/SupplementListItem"
 
 import SupplementPopup from "./Components/SupplementPopup"
 import SupplementForm from "./Components/SupplementForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import usePagination from '../Paginate/paginate';
 
 const SupplementPage: React.FC = () => {
     interface SupplementItem {
@@ -30,6 +31,15 @@ const SupplementPage: React.FC = () => {
     const [supplement, setSupplement] = useState<SupplementItem[]>([]);
     const [createSupplement, setCreateSupplement] = useState(false);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(5);
+  
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = supplement.slice(indexOfFirstPost, indexOfLastPost);
+
+    const _DATA = usePagination(supplement, postsPerPage);
     
     /*let dummydata = [{
         Supplement_plan_id: 1,
@@ -72,7 +82,6 @@ const SupplementPage: React.FC = () => {
                     average_flavor_rating: supplement.average_flavor_rating
                 })));
             }).catch(error => console.error('Error:', error));
-
     })
 
     const handleClick = (item: SupplementItem) => {
@@ -112,6 +121,16 @@ const SupplementPage: React.FC = () => {
         setConfirmDiscardForm(false);
     };
 
+    /*const paginate = ({ selected } : {selected:number}) => {
+        setCurrentPage(selected + 1);
+    };*/
+
+    const paginate = (e:any, p:number) => {
+        setCurrentPage(p);
+        _DATA.jump(p);
+    };
+    
+
     //TODO: Use CSS to better align these
     return (
         <div>
@@ -122,12 +141,19 @@ const SupplementPage: React.FC = () => {
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {supplement.map(item => (
+                    {currentPosts.map(item => (
                         <ListItemButton>
                             <ListItem supplement={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
                     ))}
                 </List>
+                <Pagination
+                  onChange={paginate}
+                  page={currentPage}
+                  count={Math.ceil(supplement.length / postsPerPage)}
+                  variant="outlined"
+                  shape="rounded"
+               />
             </div>
             <SupplementPopup selectedSupplement={selectedSupplement} onClose={handleClose} />
 

@@ -77,8 +77,26 @@ const NutritionPlanPage: React.FC = () => {
         setCreatePlan(true);
     };
 
-    const handleCreatePlanSubmit = (nutritionPlan: NutritionPlanItem) => {
-        //TODO: Figure out how to decompoes this interface into SQL queries
+    const handleCreatePlanSubmit = async (nutritionPlan: NutritionPlanItem) => {
+        try {
+            const response = await fetch('http://localhost:9000/api/nutritionPlanItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nutritionPlan)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('NutritionPlanItem successfully sent:', responseData);
+            } else {
+                console.error('Failed to send NutritionPlanItem:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error sending NutritionPlanItem:', error.message);
+        }
+
         console.log("Nutrition Plan:", nutritionPlan);
         setCreatePlan(false);
     }
