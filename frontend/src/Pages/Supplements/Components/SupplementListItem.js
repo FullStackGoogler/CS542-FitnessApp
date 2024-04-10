@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ListItem, ListItemText } from "@mui/material";
+import { ListItem, ListItemText, IconButton} from "@mui/material";
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 
@@ -12,6 +13,18 @@ const SupplementListItem = ({ supplement, onClick}) => {
         event.stopPropagation();
         setIsStarred(!isStarred);
     };
+
+    const handleDelete = async () => {
+        const response = await fetch('http://localhost:9000/api/deleteSupplement', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userprogramid: supplement.supplementid,
+            })
+        });
+    }
 
     return (
         <ListItem style={styles.listItem} onClick={onClick}>
@@ -32,6 +45,11 @@ const SupplementListItem = ({ supplement, onClick}) => {
                 <ListItemText secondary={'Overall Rating: ' + supplement.overall_rating} />
                 <ListItemText secondary={'Top Flavor Rated: ' + supplement.top_flavor_rated} />
             </div>
+            <div style={styles.rightContainer}>
+                <IconButton aria-label="delete" color="primary" onClick={handleDelete}>
+                    <DeleteOutlined />
+                </IconButton>
+            </div>
         </ListItem>
     );
 };
@@ -45,6 +63,10 @@ const styles = {
     leftContainer: {
         display: 'flex',
         flexDirection: 'column',
+    },
+    rightContainer: {
+        display: 'flex',
+        alignItems: 'right',
     },
     titleContainer: {
         display: 'flex',

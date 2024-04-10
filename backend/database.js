@@ -44,6 +44,20 @@ app.get('/api/supplements', async (req, res) => {
 });
 
 /*
+  API POST Endpoint for deleting data from the 'supplements' table.
+*/
+app.post('/api/deleteSupplement', async (req, res) => {
+    const { supplementid } = req.body;
+    try {
+      await pool.query('DELETE FROM supplements WHERE supplementid = $1', [supplementid]);
+      res.status(200).json({ message: 'Successfully deleted a Supplement.' });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/*
   API GET Endpoint for retrieving all data from the 'exercise' table.
 */
 app.get('/api/exercises', async (req, res) => {
