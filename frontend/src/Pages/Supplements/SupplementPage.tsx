@@ -33,7 +33,7 @@ const SupplementPage: React.FC = () => {
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(5);
+    const [postsPerPage] = useState(10);
   
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -143,7 +143,7 @@ const SupplementPage: React.FC = () => {
                 <List>
                     {currentPosts.map(item => (
                         <ListItemButton>
-                            <ListItem supplement={item} onClick={() => handleClick(item)}/>
+                            <ListItem key={item.supplementid} supplement={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
                     ))}
                 </List>

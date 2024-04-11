@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ListItem, ListItemText } from "@mui/material";
+import { ListItem, ListItemText, IconButton} from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
 const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
     //console.log(nutritionPlan)
@@ -12,6 +13,19 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
         event.stopPropagation();
         setIsStarred(!isStarred);
     };
+
+    const handleDelete = async () => {
+        console.log("delete pressed")
+        const response = await fetch('http://localhost:9000/api/deleteNutritionPlan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nutrition_plan_id: nutritionPlan.nutrition_plan_id,
+            })
+        });
+    }
 
     return (
         <ListItem style={styles.listItem} onClick={onClick}>
@@ -28,6 +42,11 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
                 <ListItemText primary= {'Protein goal: ' + nutritionPlan.protein_goal + ' g'}/>
                 <ListItemText primary={'Fat goal: ' + nutritionPlan.fat_goal + ' g'} />
                 <ListItemText primary={'Carb goal: ' + nutritionPlan.carb_goal + ' g'} />
+            </div>
+            <div style={styles.rightContainer}>
+                <IconButton aria-label="delete" color="primary" onClick={handleDelete}>
+                    <DeleteOutlined />
+                </IconButton>
             </div>
         </ListItem>
     );

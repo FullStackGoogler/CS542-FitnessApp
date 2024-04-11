@@ -1,11 +1,12 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, Button, Pagination} from "@mui/material";
 import ListItem  from "./Components/NutritionPlanListItem"
 
 import NutritionPlanPopup from "./Components/NutritionPlanPopup"
 import NutritionPlanForm from "./Components/NutritionPlanForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import usePagination from '../Paginate/paginate';
 
 const NutritionPlanPage: React.FC = () => {
     interface NutritionPlanItem {
@@ -21,6 +22,16 @@ const NutritionPlanPage: React.FC = () => {
     const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanItem[]>([]);
     const [createPlan, setCreatePlan] = useState(false);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(10);
+  
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = nutritionPlan.slice(indexOfFirstPost, indexOfLastPost);
+
+    const _DATA = usePagination(nutritionPlan, postsPerPage);
+    
     
     /*let dummydata = [{
         nutrition_plan_id: 1,
@@ -112,6 +123,12 @@ const NutritionPlanPage: React.FC = () => {
         setConfirmDiscardForm(false);
     };
 
+    const paginate = (e:any, p:number) => {
+        setCurrentPage(p);
+        _DATA.jump(p);
+    };
+    
+
     //TODO: Use CSS to better align these
     return (
         <div>
@@ -124,10 +141,17 @@ const NutritionPlanPage: React.FC = () => {
                 <List>
                     {nutritionPlan.map(item => (
                         <ListItemButton>
-                            <ListItem nutritionPlan={item} onClick={() => handleClick(item)}/>
+                            <ListItem key={item.nutrition_plan_id} nutritionPlan={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
                     ))}
                 </List>
+                <Pagination
+                  onChange={paginate}
+                  page={currentPage}
+                  count={Math.ceil(nutritionPlan.length / postsPerPage)}
+                  variant="outlined"
+                  shape="rounded"
+               />
             </div>
             <NutritionPlanPopup selectedNutritionPlan={selectedNutritionPlan} onClose={handleClose} />
 
