@@ -8,28 +8,49 @@ const HomePage = () => {
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [currentDay, setCurrentDay] = useState<number>(0);
+    const currentDate = new Date();
 
-    //Fetch all User Programs on page load
+    const formattedDate = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    //Fetch all User Programs on page load that the current user has favorited
     useEffect(() => {
         fetch('http://localhost:9000/api/userprograms')
             .then(response => response.json())
             .then(data => {
-                setUserPrograms(data.map((program: any) => ({ //TODO: Filter the user programs with currentUser.userID = userID in userfollowsuserprogram
-                    userProgramID: program.userprogramid,
-                    userProgramName: program.user_program_name,
-                    userProgramDescription: program.user_program_desc,
-                    userProgramOwner: program.username,
-                    daysPerWeek: program.num_days_per_week,
-                    image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`,
-                    workouts: []
-                })));
+                fetch(`http://localhost:9000/api/userfollowsuserprogram/1`) //TODO: Currently have hardcoded
+                    .then(response => response.json())
+                    .then(userFollows => {
+                        //Filter to only include programs that are favorited
+                        const followedProgramIDs = userFollows.map((follow: any) => follow.userprogramid);
+    
+                        const filteredPrograms = data
+                            .filter((program: any) => followedProgramIDs.includes(program.userprogramid))
+                            .map((program: any) => ({
+                                userProgramID: program.userprogramid,
+                                userProgramName: program.user_program_name,
+                                userProgramDescription: program.user_program_desc,
+                                userProgramOwner: program.username,
+                                daysPerWeek: program.num_days_per_week,
+                                image: program.imageURL || `https://via.placeholder.com/150/3A795E/FFFFFF/?text=User+Program`,
+                                workouts: []
+                            }));
+    
+                        setUserPrograms(filteredPrograms);
+                    })
+                    .catch(error => console.error('Error fetching user-followed programs:', error));
             })
-        .catch(error => console.error('Error:', error));
-
+            .catch(error => console.error('Error fetching user programs:', error));
+    
         //Determine the current day
         const today = new Date().getDay();
         setCurrentDay(today);
-    }, [])
+    }, []);
+    
 
     const handleSelectedProgram = (userProgramID: number) => {
         fetch(`http://localhost:9000/api/userprogram/${userProgramID}/workouts`)
@@ -93,10 +114,17 @@ const HomePage = () => {
         <div>
             <TopBar title="Home Page" titleColor="#ffffff"/>
             <div style={{ padding: '75px 10px' }}>
+                <Typography variant="h4" component="div">
+                    Welcome Back!
+                </Typography>
+                <Typography variant="h6" component="div">
+                    Today's Date is: {formattedDate}
+                </Typography>
+                <Divider style={{ margin: "20px 0" }} />
                 <Typography variant="h6" component="div">
                     Select a User Program:
                 </Typography>
-                <FormControl fullWidth>
+                <FormControl style={{ width: '15%' }}>
                     <InputLabel id="program-select-label">User Program</InputLabel>
                     <Select
                         label="User Program"
