@@ -3,12 +3,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, S
 import Autocomplete from '@mui/material/Autocomplete';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { WorkoutItem } from "./WorkoutItem";
-
-interface Exercise {
-    exercise_id: number;
-    exercise_name: string;
-}
+import { WorkoutItem } from "../Interfaces/WorkoutItem";
+import { Exercise } from "../Interfaces/Exercise";
 
 interface Props {
     open: boolean;

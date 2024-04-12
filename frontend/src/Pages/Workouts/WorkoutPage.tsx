@@ -5,7 +5,7 @@ import ListItem  from "./Components/WorkoutListItem"
 import WorkoutPopup from "./Components/WorkoutPopup"
 import WorkoutForm from "./Components/WorkoutForm";
 
-import { WorkoutItem } from "./Components/WorkoutItem";
+import { WorkoutItem } from "./Interfaces/WorkoutItem";
 
 const WorkoutPage: React.FC = () => {
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);

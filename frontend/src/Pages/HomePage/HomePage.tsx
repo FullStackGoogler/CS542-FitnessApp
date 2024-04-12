@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TopBar from "../../Components/TopBar";
 import { FormControl, InputLabel, Select, MenuItem, Typography, Divider } from "@mui/material";
 
-import { WorkoutItem } from "../Workouts/Components/WorkoutItem";
+import { WorkoutItem } from "../Workouts/Interfaces/WorkoutItem";
 
 const HomePage = () => {
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);

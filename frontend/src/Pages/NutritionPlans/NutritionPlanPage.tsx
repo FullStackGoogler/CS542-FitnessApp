@@ -8,16 +8,9 @@ import NutritionPlanForm from "./Components/NutritionPlanForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import usePagination from '../Paginate/paginate';
 
-const NutritionPlanPage: React.FC = () => {
-    interface NutritionPlanItem {
-        nutrition_plan_id: number;
-        calorie_goal: number;
-        diet_type: string;
-        protein_goal: number;
-        fat_goal: number;
-        carb_goal: number;
-    }
+import { NutritionPlanItem } from "./Interfaces/NutritionPlanItem";
 
+const NutritionPlanPage: React.FC = () => {
     const [selectedNutritionPlan, setSelectedNutritionPlan] = useState<NutritionPlanItem | null>(null);
     const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanItem[]>([]);
     const [createPlan, setCreatePlan] = useState(false);
