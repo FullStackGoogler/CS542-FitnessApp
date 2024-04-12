@@ -3,6 +3,7 @@ import { ListItem, ListItemText, IconButton} from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 
 const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
     //console.log(nutritionPlan)
@@ -12,9 +13,35 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
     function handleStarClick(event) {
         event.stopPropagation();
         setIsStarred(!isStarred);
+        handleStarChange();
+    };
+    const handleStarChange = async () => {
+        try {
+            const response = await fetch('http://localhost:9000/api/StarredNutritionPlan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nutrition_plan_id: nutritionPlan.nutrition_plan_id,
+                    isStarred: !isStarred,
+                    userId: 1
+                })
+            });
+
+            if (response.ok) {
+                setIsStarred(!isStarred); //Update local state
+                const responseData = await response.json();
+                console.log('NutritionPlan Star successfully modified:', responseData);
+            } else {
+                console.error('Failed to add/remove nutrition plan from favorites:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error adding/removing nutrition plan from favorites:', error.message);
+        }
     };
 
-    const handleDelete = async () => {
+    /*const handleDelete = async () => {
         console.log("delete pressed")
         const response = await fetch('http://localhost:9000/api/deleteNutritionPlan', {
             method: 'POST',
@@ -25,7 +52,22 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
                 nutrition_plan_id: nutritionPlan.nutrition_plan_id,
             })
         });
-    }
+    }*/
+
+    /*const handleEdit = async () => {
+        console.log("edit pressed")
+
+        /*const response = await fetch('http://localhost:9000/api/deleteNutritionPlan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nutrition_plan_id: nutritionPlan.nutrition_plan_id,
+            })
+        });*/
+    /*}*/
+
 
     return (
         <ListItem style={styles.listItem} onClick={onClick}>
@@ -42,11 +84,6 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
                 <ListItemText primary= {'Protein goal: ' + nutritionPlan.protein_goal + ' g'}/>
                 <ListItemText primary={'Fat goal: ' + nutritionPlan.fat_goal + ' g'} />
                 <ListItemText primary={'Carb goal: ' + nutritionPlan.carb_goal + ' g'} />
-            </div>
-            <div style={styles.rightContainer}>
-                <IconButton aria-label="delete" color="primary" onClick={handleDelete}>
-                    <DeleteOutlined />
-                </IconButton>
             </div>
         </ListItem>
     );

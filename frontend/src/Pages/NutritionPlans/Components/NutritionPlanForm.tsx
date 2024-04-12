@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-
-interface NutritionPlanItem {
-    nutrition_plan_id: number;
-    calorie_goal: number;
-    diet_type: string;
-    protein_goal: number;
-    fat_goal: number;
-    carb_goal: number;
-}
+import { NutritionPlanItem } from "../Interfaces/NutritionPlanItem";
 
 interface Props {
     open: boolean;
     onClose: () => void;
     onSubmit: (nutritionPlanItem: NutritionPlanItem) => void;
+    create: boolean;
+    id: number;
+    //inItem: NutritionPlanItem | null;
 }
 
-const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
+const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit, create, id}) => {
     const [dietType, setDietType] = useState("");
     const [calorieGoal, setCalorieGoal] = useState("");
     const [proteinGoal, setProteinGoal] = useState("");
     const [fatGoal, setFatGoal] = useState("");
     const [carbGoal, setCarbGoal] = useState("");
+    const [isCreate, setIsCreate] = useState(true);
+    //const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
         if (open) {
-            setDietType("");
+            setIsCreate(create);
+            if(create){
+                setDietType("");
+            };
         }
     }, [open]);
 
     const handleCreatePlanSubmit = () => {
+        
+        //let id = 0;
+        /*if(inItem != null){
+            id = inItem.nutrition_plan_id;
+        }*/
+        console.log("id: ", id);
         const nutritionPlan: NutritionPlanItem = {
-            nutrition_plan_id: 0,//TODO: some way to get this not here
+            nutrition_plan_id: id,
             calorie_goal: Number(calorieGoal),
             diet_type: dietType,
             protein_goal: Number(proteinGoal),
@@ -113,7 +119,7 @@ const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCreatePlanSubmit}>Create Program</Button>
+                {isCreate ? <Button onClick={handleCreatePlanSubmit}>Create Program</Button> : <Button onClick={handleCreatePlanSubmit}>Edit Program</Button>}
             </DialogActions>
         </Dialog>
     );

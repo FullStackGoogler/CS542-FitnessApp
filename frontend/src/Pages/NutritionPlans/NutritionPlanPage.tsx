@@ -1,12 +1,17 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button, Pagination} from "@mui/material";
+import { List, ListItemButton, ListItemSecondaryAction, Button, IconButton, Pagination} from "@mui/material";
 import ListItem  from "./Components/NutritionPlanListItem"
 
 import NutritionPlanPopup from "./Components/NutritionPlanPopup"
 import NutritionPlanForm from "./Components/NutritionPlanForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import usePagination from '../Paginate/paginate';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import { isTemplateHead } from "typescript";
+import { setMaxIdleHTTPParsers } from "http";
+
 
 import { NutritionPlanItem } from "./Interfaces/NutritionPlanItem";
 
@@ -14,6 +19,8 @@ const NutritionPlanPage: React.FC = () => {
     const [selectedNutritionPlan, setSelectedNutritionPlan] = useState<NutritionPlanItem | null>(null);
     const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanItem[]>([]);
     const [createPlan, setCreatePlan] = useState(false);
+    const [editPlan, setEditPlan] = useState(false);
+    const [editId, setEditId] = useState(0);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -109,12 +116,63 @@ const NutritionPlanPage: React.FC = () => {
         setConfirmDiscardForm(true);
     };
 
+    const handleEditPlanSubmit = async (nutritionPlan: NutritionPlanItem) => {
+        try {
+            const response = await fetch('http://localhost:9000/api/nutritionPlanEdit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nutritionPlan)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('NutritionPlanItem successfully sent:', responseData);
+            } else {
+                console.error('Failed to send NutritionPlanItem:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error sending NutritionPlanItem:', error.message);
+        }
+
+        console.log("Nutrition Plan:", nutritionPlan);
+        setCreatePlan(false);
+    }
+
+    const handleEdit = async (nutritionPlan: NutritionPlanItem) => {
+        console.log("edit pressed");
+        setSelectedNutritionPlan(nutritionPlan);
+        setEditPlan(true);
+        setCreatePlan(false);
+        setEditId(nutritionPlan.nutrition_plan_id);
+    }
+
+    const handleEditPlanClose = () => {
+        console.log("edit plan closed");
+        setEditPlan(false);
+        setCreatePlan(true);
+    };
+
     const handleDiscardFormClose = (discard: boolean) => {
         if (discard) {
             setCreatePlan(false);
         }
         setConfirmDiscardForm(false);
     };
+
+    const handleDelete = async (nutritionPlan: NutritionPlanItem) => {
+        console.log("delete pressed")
+        const response = await fetch('http://localhost:9000/api/deleteNutritionPlan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nutrition_plan_id: nutritionPlan.nutrition_plan_id,
+            })
+        });
+    }
 
     const paginate = (e:any, p:number) => {
         setCurrentPage(p);
@@ -135,6 +193,14 @@ const NutritionPlanPage: React.FC = () => {
                     {nutritionPlan.map(item => (
                         <ListItemButton>
                             <ListItem key={item.nutrition_plan_id} nutritionPlan={item} onClick={() => handleClick(item)}/>
+                            <ListItemSecondaryAction >
+                                <IconButton aria-label="edit" color="primary" onClick={() => handleEdit(item)}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton aria-label="delete" color="primary" onClick={() => handleDelete(item)}>
+                                    <DeleteOutlined />
+                                </IconButton>
+                            </ListItemSecondaryAction>
                         </ListItemButton>
                     ))}
                 </List>
@@ -148,7 +214,9 @@ const NutritionPlanPage: React.FC = () => {
             </div>
             <NutritionPlanPopup selectedNutritionPlan={selectedNutritionPlan} onClose={handleClose} />
 
-            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} />
+            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} create={true} id={editId}/>
+
+            <NutritionPlanForm open={editPlan} onClose={handleEditPlanClose} onSubmit={handleEditPlanSubmit} create={false} id={editId}/>
         </div>
     );
 }    

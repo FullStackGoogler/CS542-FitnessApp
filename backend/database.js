@@ -20,6 +20,7 @@ const pool = new Pool({
   API GET Endpoint for retrieving all data from the 'nutrition_plan' table.
 */
 app.get('/api/nutritionplan', async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
   try {
     const result = await pool.query('SELECT * FROM Nutrition_Plan');
     res.send(result.rows);
@@ -55,6 +56,48 @@ app.post('/api/deleteSupplement', async (req, res) => {
       console.error('Error executing query:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+
+
+/*
+  API POST/DELETE Endpoint for adding/removing a Supplement to the 'userTakesSupplement' table.
+*/
+app.post('/api/StarredSupplement', async (req, res) => {
+  const { supplementid, isStarred, user_id } = req.body;
+
+  try {
+      if (!user_id) {
+          return res.status(400).json({ error: 'Invalid userID.' });
+      }
+
+      if (isStarred) {  
+          await pool.query('INSERT INTO takes (user_id, supplementid) VALUES ($1, $2)', [user_id, supplementid]);
+          res.status(200).json({ message: 'Successfully added a favorite supplement.' });
+      }
+      
+      if (!isStarred) {
+          await pool.query('DELETE FROM takes WHERE user_id = $1 AND supplementid = $2', [user_id, supplementid]);
+          res.status(200).json({ message: 'Successfully deleted a favorite supplement.' });
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+/*
+  API GET Endpoint for fetching all 'takes' (user take supplement) entries with a matching user_ID.
+*/
+app.get('/api/takes/:user_id', async (req, res) => {
+  const userId = req.params.user_id;
+
+  try {
+      const result = await pool.query('SELECT * FROM takes WHERE user_id = $1', [userId]);
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 /*
@@ -189,7 +232,7 @@ app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
 
 
 /*
-  API GET Endpoint fo retrieving all data from the 'userprogram' table.
+  API GET Endpoint for retrieving all data from the 'userprogram' table.
 */
 app.get('/api/userprograms', async (req, res) => {
   try {
@@ -356,6 +399,7 @@ app.get('/api/userfollowsuserprogram/:userId', async (req, res) => {
 
 //insert Nutrition_Plan
 app.post('/api/nutritionPlanItem', async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
   const nutritionPlanItem = req.body;
 
   //console.log("Received workoutItem:", workoutItem); //TODO: Debugging purposes
@@ -369,11 +413,11 @@ app.post('/api/nutritionPlanItem', async (req, res) => {
 
     //Insert UserProgram first, retrieve the UserProgramID
     const insertNutritionPlanQuery = `
-        INSERT INTO nutrition_plan (nutrition_plan_id, calorie_goal, diet_type, protein_goal, fat_goal, carb_goal)
-        VALUES (true, $1, $2, $3, $4, $5)
+        INSERT INTO nutrition_plan (calorie_goal, diet_type, protein_goal, fat_goal, carb_goal)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING nutrition_plan_id
     `;
-    const nutritionPlanValues = [nutritionPlanItem.nutrition_plan_id, nutritionPlanItem.calorie_goal, nutritionPlanItem.diet_type, nutritionPlanItem.protein_goal, nutritionPlanItem.fat_goal, nutritionPlanItem.carb_goal];
+    const nutritionPlanValues = [nutritionPlanItem.calorie_goal, nutritionPlanItem.diet_type, nutritionPlanItem.protein_goal, nutritionPlanItem.fat_goal, nutritionPlanItem.carb_goal];
     //const { rows } = await client.query(insertUserProgramQuery, userProgramValues);
     //const nutritionPlanID = rows[0].nutrition_plan_id;
     await client.query(insertNutritionPlanQuery, nutritionPlanValues);
@@ -385,6 +429,89 @@ app.post('/api/nutritionPlanItem', async (req, res) => {
 } finally {
     client.release();
 }
+});
+
+/*
+  API POST Endpoint for deleting data from the 'nutrition_plan' table.
+*/
+app.post('/api/deleteNutritionPlan', async (req, res) => {
+  const { nutrition_plan_id } = req.body;
+  try {
+    await pool.query('DELETE FROM nutrition_plan WHERE nutrition_plan_id = $1', [nutrition_plan_id]);
+    res.status(200).json({ message: 'Successfully deleted a Nutrition Plan.' });
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+/*
+  API POST Endpoint for editing data from the 'nutrition_plan' table.
+*/
+app.post('/api/nutritionPlanEdit', async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  const nutritionPlanItem = req.body;
+
+  //console.log("Received workoutItem:", workoutItem); //TODO: Debugging purposes
+
+  res.status(200).json({ message: 'NutritionPlanItem received successfully.' });
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    //Insert UserProgram first, retrieve the UserProgramID
+    const editNutritionPlanQuery = 
+      `UPDATE nutrition_plan
+          SET calorie_goal = $1,
+              diet_type = $2,
+              protein_goal = $3,
+              fat_goal = $4,
+              carb_goal = $5 
+          WHERE nutrition_plan_id = $6
+          RETURNING nutrition_plan_id;`;
+    console.log(editNutritionPlanQuery);
+    const nutritionPlanValues = [nutritionPlanItem.calorie_goal, nutritionPlanItem.diet_type, nutritionPlanItem.protein_goal, nutritionPlanItem.fat_goal, nutritionPlanItem.carb_goal, nutritionPlanItem.nutrition_plan_id];
+    //const { rows } = await client.query(insertUserProgramQuery, userProgramValues);
+    //const nutritionPlanID = rows[0].nutrition_plan_id;
+    await client.query(editNutritionPlanQuery, nutritionPlanValues);
+
+    await client.query('COMMIT');
+} catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+} finally {
+    client.release();
+}
+});
+
+
+/*
+  API POST/DELETE Endpoint for adding/removing a nutritionPlan to the 'userfollowsnutritionplan' table.
+*/
+app.post('/api/StarredNutritionPlan', async (req, res) => {
+  const { nutrition_plan_id, isStarred, userID } = req.body;
+
+  try {
+      if (!userID) {
+          return res.status(400).json({ error: 'Invalid userID.' });
+      }
+
+      if (isStarred) {  
+          await pool.query('INSERT INTO userfollowsnutritionplan (userID, nutrition_plan_id) VALUES ($1, $2)', [userID, nutrition_plan_id]);
+          res.status(200).json({ message: 'Successfully added a favorite nutrition plan.' });
+      }
+      
+      if (!isStarred) {
+          await pool.query('DELETE FROM userfollowsnutritionplan WHERE user_id = $1 AND nutrition_plan_id = $2', [userID, nutrition_plan_id]);
+          res.status(200).json({ message: 'Successfully deleted a favorite nutrition plan.' });
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.listen(9000, () => {
