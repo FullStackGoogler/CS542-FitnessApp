@@ -1,6 +1,6 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button, Pagination } from "@mui/material";
+import { List, ListItemButton, Button, Pagination, TextField } from "@mui/material";
 import ListItem  from "./Components/SupplementListItem"
 
 import SupplementPopup from "./Components/SupplementPopup"
@@ -18,12 +18,18 @@ const SupplementPage: React.FC = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(10);
+
+    const [searchQuery, setSearchQuery] = useState("");
   
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = supplement.slice(indexOfFirstPost, indexOfLastPost);
 
     const _DATA = usePagination(supplement, postsPerPage);
+
+    const filteredSupplements = supplement.filter(supplement =>
+        supplement.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     
     /*let dummydata = [{
         Supplement_plan_id: 1,
@@ -121,11 +127,18 @@ const SupplementPage: React.FC = () => {
             <TopBar title="Supplements" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Supplements</div>
+                <TextField
+                    label="Search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                />
                 <Button variant="contained" color="primary" onClick={handleCreate}>Add a Supplement</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {currentPosts.map(item => (
+                    {filteredSupplements.map(item => (
                         <ListItemButton>
                             <ListItem key={item.supplementid} supplement={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
