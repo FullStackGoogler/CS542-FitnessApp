@@ -7,6 +7,11 @@ import WorkoutForm from "./Components/WorkoutForm";
 
 import { WorkoutItem } from "./Interfaces/WorkoutItem";
 
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+
+import './WorkoutPage.css';
+
 const WorkoutPage: React.FC = () => {
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
@@ -123,6 +128,9 @@ const WorkoutPage: React.FC = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         variant="outlined"
                         size="small"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+                        }}
                     />
                 </div>
                 <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>

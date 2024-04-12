@@ -10,6 +10,9 @@ import usePagination from '../Paginate/paginate';
 
 import { SupplementItem } from "./Interfaces/SupplementItem";
 
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+
 const SupplementPage: React.FC = () => {
     const [selectedSupplement, setSelectedSupplement] = useState<SupplementItem | null>(null);
     const [supplement, setSupplement] = useState<SupplementItem[]>([]);
@@ -132,6 +135,9 @@ const SupplementPage: React.FC = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         variant="outlined"
                         size="small"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+                        }}
                     />
                 </div>
                 <Button variant="contained" color="primary" onClick={handleCreate}>Add a Supplement</Button>
