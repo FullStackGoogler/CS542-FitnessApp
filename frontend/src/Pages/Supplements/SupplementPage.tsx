@@ -138,7 +138,7 @@ const SupplementPage: React.FC = () => {
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {filteredSupplements.map(item => (
+                    {currentPosts.map(item => (
                         <ListItemButton>
                             <ListItem key={item.supplementid} supplement={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
