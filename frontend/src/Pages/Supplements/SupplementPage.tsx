@@ -120,20 +120,20 @@ const SupplementPage: React.FC = () => {
         _DATA.jump(p);
     };
     
-
-    //TODO: Use CSS to better align these
     return (
         <div>
             <TopBar title="Supplements" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Supplements</div>
-                <TextField
-                    label="Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '10px' }}>List of Supplements</div>
+                    <TextField
+                        label="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
                 <Button variant="contained" color="primary" onClick={handleCreate}>Add a Supplement</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>

@@ -115,14 +115,16 @@ const WorkoutPage: React.FC = () => {
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of User Programs</div>
-                <TextField
-                    label="Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '10px' }}>List of User Programs</div>
+                    <TextField
+                        label="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
                 <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
