@@ -20,16 +20,16 @@ const SupplementPage: React.FC = () => {
     const [postsPerPage] = useState(10);
 
     const [searchQuery, setSearchQuery] = useState("");
-  
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = supplement.slice(indexOfFirstPost, indexOfLastPost);
-
-    const _DATA = usePagination(supplement, postsPerPage);
 
     const filteredSupplements = supplement.filter(supplement =>
         supplement.product_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+  
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = filteredSupplements.slice(indexOfFirstPost, indexOfLastPost);
+
+    const _DATA = usePagination(filteredSupplements, postsPerPage);
     
     /*let dummydata = [{
         Supplement_plan_id: 1,
@@ -147,7 +147,7 @@ const SupplementPage: React.FC = () => {
                 <Pagination
                   onChange={paginate}
                   page={currentPage}
-                  count={Math.ceil(supplement.length / postsPerPage)}
+                  count={Math.ceil(filteredSupplements.length / postsPerPage)}
                   variant="outlined"
                   shape="rounded"
                />
