@@ -5,35 +5,9 @@ import ListItem  from "./Components/WorkoutListItem"
 import WorkoutPopup from "./Components/WorkoutPopup"
 import WorkoutForm from "./Components/WorkoutForm";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { WorkoutItem } from "./Components/WorkoutItem";
 
 const WorkoutPage: React.FC = () => {
-    interface WorkoutItem { //Define interface for a singular complete User Program
-        userProgramID: number;
-        userProgramName: string;
-        userProgramDescription: string;
-        userProgramOwner: number;
-        daysPerWeek: number;
-        image: string;
-        workouts: {
-            workoutID: number;
-            workoutName: string;
-            targetGroup: string;
-            workoutPosition: number;
-            activities: {
-                activityID: number;
-                exerciseID: number;
-                muscleGroup: string;
-                reps: string;
-                sets: number;
-                rpe: number;
-                restTime: string;
-                notes: string;
-                position: number;
-            }[];
-        }[];
-    }
-
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);

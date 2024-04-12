@@ -2,37 +2,12 @@ import React, { useState, useEffect } from "react";
 import TopBar from "../../Components/TopBar";
 import { FormControl, InputLabel, Select, MenuItem, Typography, Divider } from "@mui/material";
 
+import { WorkoutItem } from "../Workouts/Components/WorkoutItem";
+
 const HomePage = () => {
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [currentDay, setCurrentDay] = useState<number>(0);
-
-    interface WorkoutItem { //Define interface for a singular complete User Program
-        userProgramID: number;
-        userProgramName: string;
-        userProgramDescription: string;
-        userProgramOwner: number;
-        daysPerWeek: number;
-        image: string;
-        workouts: {
-            workoutID: number;
-            workoutName: string;
-            targetGroup: string;
-            workoutPosition: number;
-            activities: {
-                activityID: number;
-                exerciseID: number;
-                exerciseName: string; //TODO:
-                muscleGroup: string;
-                reps: string;
-                sets: number;
-                rpe: number;
-                restTime: string;
-                notes: string;
-                position: number;
-            }[];
-        }[];
-    }
 
     //Fetch all User Programs on page load
     useEffect(() => {
