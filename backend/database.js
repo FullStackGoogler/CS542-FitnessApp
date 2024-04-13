@@ -113,6 +113,9 @@ app.get('/api/exercises', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for retrieving all data from the 'meal_plan' table
+*/
 app.get('/api/mealplan', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM meal_plan');
@@ -176,60 +179,6 @@ app.get('/api/userprogram/:dailymealplanid/dailymealplan', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
-  const userProgramId = req.params.userProgramId;
-
-  try {
-    const programQuery = {
-      text: `
-          SELECT 
-                  up.userprogramid,
-                  up.ispublic,
-                  up.num_days_per_week,
-                  up.user_program_name,
-                  up.user_program_desc,
-                  w.workout_id,
-                  w.workout_name,
-                  w.target_group,
-                  w.position AS workoutPosition,
-                  a.activity_id,
-                  a.reps,
-                  a.sets,
-                  a.rpe,
-                  a.rest,
-                  a.note,
-                  a.position,
-                  e.exercise_id,
-                  e.exercise_name,
-                  e.muscle_group,
-                  e.equipment,
-                  e.video,
-                  u.username
-              FROM 
-                  userprogram up
-              JOIN
-                  usertable u ON up.owner = u.userid
-              JOIN 
-                  workout w ON up.userprogramid = w.userprogram_id
-              JOIN 
-                  activity a ON w.workout_id = a.workout
-              JOIN 
-                  exercise e ON a.exercise = e.exercise_id
-              WHERE 
-                  up.userprogramid = $1
-          `,
-      values: [userProgramId]
-    };
-
-    const result = await pool.query(programQuery);
-    res.json(result.rows);
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 
 /*
   API GET Endpoint for retrieving all data from the 'userprogram' table.
@@ -445,7 +394,6 @@ app.post('/api/deleteNutritionPlan', async (req, res) => {
   }
 });
 
-
 /*
   API POST Endpoint for editing data from the 'nutrition_plan' table.
 */
@@ -486,7 +434,6 @@ app.post('/api/nutritionPlanEdit', async (req, res) => {
     client.release();
 }
 });
-
 
 /*
   API POST/DELETE Endpoint for adding/removing a nutritionPlan to the 'userfollowsnutritionplan' table.
