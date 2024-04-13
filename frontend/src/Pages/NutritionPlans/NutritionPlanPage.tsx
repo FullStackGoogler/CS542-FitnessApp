@@ -1,26 +1,38 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, ListItemSecondaryAction, Button, IconButton, Pagination} from "@mui/material";
 import ListItem  from "./Components/NutritionPlanListItem"
 
 import NutritionPlanPopup from "./Components/NutritionPlanPopup"
 import NutritionPlanForm from "./Components/NutritionPlanForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import usePagination from '../Paginate/paginate';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import { isTemplateHead } from "typescript";
+import { setMaxIdleHTTPParsers } from "http";
+
+
+import { NutritionPlanItem } from "./Interfaces/NutritionPlanItem";
 
 const NutritionPlanPage: React.FC = () => {
-    interface NutritionPlanItem {
-        nutrition_plan_id: number;
-        calorie_goal: number;
-        diet_type: string;
-        protein_goal: number;
-        fat_goal: number;
-        carb_goal: number;
-    }
-
     const [selectedNutritionPlan, setSelectedNutritionPlan] = useState<NutritionPlanItem | null>(null);
+    const [editNutritionPlan, setEditNutritionPlan] = useState<NutritionPlanItem|null>(null);
     const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanItem[]>([]);
     const [createPlan, setCreatePlan] = useState(false);
+    const [editPlan, setEditPlan] = useState(false);
+    //const [editId, setEditId] = useState(0);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(10);
+  
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = nutritionPlan.slice(indexOfFirstPost, indexOfLastPost);
+
+    const _DATA = usePagination(nutritionPlan, postsPerPage);
+    
     
     /*let dummydata = [{
         nutrition_plan_id: 1,
@@ -77,8 +89,26 @@ const NutritionPlanPage: React.FC = () => {
         setCreatePlan(true);
     };
 
-    const handleCreatePlanSubmit = (nutritionPlan: NutritionPlanItem) => {
-        //TODO: Figure out how to decompoes this interface into SQL queries
+    const handleCreatePlanSubmit = async (nutritionPlan: NutritionPlanItem) => {
+        try {
+            const response = await fetch('http://localhost:9000/api/nutritionPlanItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nutritionPlan)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('NutritionPlanItem successfully sent:', responseData);
+            } else {
+                console.error('Failed to send NutritionPlanItem:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error sending NutritionPlanItem:', error.message);
+        }
+
         console.log("Nutrition Plan:", nutritionPlan);
         setCreatePlan(false);
     }
@@ -87,12 +117,67 @@ const NutritionPlanPage: React.FC = () => {
         setConfirmDiscardForm(true);
     };
 
+    const handleEditPlanSubmit = async (nutritionPlan: NutritionPlanItem) => {
+        try {
+            const response = await fetch('http://localhost:9000/api/nutritionPlanEdit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nutritionPlan)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('NutritionPlanItem successfully sent:', responseData);
+            } else {
+                console.error('Failed to send NutritionPlanItem:', response.statusText);
+            }
+        } catch (error: any) {
+            console.error('Error sending NutritionPlanItem:', error.message);
+        }
+
+        console.log("Nutrition Plan:", nutritionPlan);
+        setCreatePlan(false);
+    }
+
+    const handleEdit = async (nutritionPlan: NutritionPlanItem) => {
+        console.log("edit pressed");
+        setEditNutritionPlan(nutritionPlan);
+        setEditPlan(true);
+        //setEditId(nutritionPlan.nutrition_plan_id);
+    }
+
+    const handleEditPlanClose = () => {
+        console.log("edit plan closed");
+        setEditPlan(false);
+    };
+
     const handleDiscardFormClose = (discard: boolean) => {
         if (discard) {
             setCreatePlan(false);
         }
         setConfirmDiscardForm(false);
     };
+
+    const handleDelete = async (nutritionPlan: NutritionPlanItem) => {
+        console.log("delete pressed")
+        const response = await fetch('http://localhost:9000/api/deleteNutritionPlan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nutrition_plan_id: nutritionPlan.nutrition_plan_id,
+            })
+        });
+    }
+
+    const paginate = (e:any, p:number) => {
+        setCurrentPage(p);
+        _DATA.jump(p);
+    };
+    
 
     //TODO: Use CSS to better align these
     return (
@@ -106,14 +191,31 @@ const NutritionPlanPage: React.FC = () => {
                 <List>
                     {nutritionPlan.map(item => (
                         <ListItemButton>
-                            <ListItem nutritionPlan={item} onClick={() => handleClick(item)}/>
+                            <ListItem key={item.nutrition_plan_id} nutritionPlan={item} onClick={() => handleClick(item)}/>
+                            <ListItemSecondaryAction >
+                                <IconButton aria-label="edit" color="primary" onClick={() => handleEdit(item)}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton aria-label="delete" color="primary" onClick={() => handleDelete(item)}>
+                                    <DeleteOutlined />
+                                </IconButton>
+                            </ListItemSecondaryAction>
                         </ListItemButton>
                     ))}
                 </List>
+                <Pagination
+                  onChange={paginate}
+                  page={currentPage}
+                  count={Math.ceil(nutritionPlan.length / postsPerPage)}
+                  variant="outlined"
+                  shape="rounded"
+               />
             </div>
             <NutritionPlanPopup selectedNutritionPlan={selectedNutritionPlan} onClose={handleClose} />
 
-            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} />
+            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} create={true} editItem={editNutritionPlan}/>
+
+            <NutritionPlanForm open={editPlan} onClose={handleEditPlanClose} onSubmit={handleEditPlanSubmit} create={false} editItem={editNutritionPlan}/>
         </div>
     );
 }    

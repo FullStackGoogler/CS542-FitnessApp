@@ -1,42 +1,26 @@
 import React, { useEffect, useState } from "react";
 import TopBar from "../../Components/TopBar";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, Button, TextField } from "@mui/material";
 import ListItem  from "./Components/WorkoutListItem"
 import WorkoutPopup from "./Components/WorkoutPopup"
 import WorkoutForm from "./Components/WorkoutForm";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { WorkoutItem } from "./Interfaces/WorkoutItem";
+
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+
+import './WorkoutPage.css';
 
 const WorkoutPage: React.FC = () => {
-    interface WorkoutItem { //Define interface for a singular complete User Program
-        userProgramID: number;
-        userProgramName: string;
-        userProgramDescription: string;
-        userProgramOwner: number;
-        daysPerWeek: number;
-        image: string;
-        workouts: {
-            workoutID: number;
-            workoutName: string;
-            targetGroup: string;
-            workoutPosition: number;
-            activities: {
-                activityID: number;
-                exerciseID: number;
-                muscleGroup: string;
-                reps: string;
-                sets: number;
-                rpe: number;
-                restTime: string;
-                notes: string;
-                position: number;
-            }[];
-        }[];
-    }
-
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredUserPrograms = userPrograms.filter(program =>
+        program.userProgramName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     
     //Fetch all User Programs on page load
     useEffect(() => {
@@ -136,12 +120,24 @@ const WorkoutPage: React.FC = () => {
         <div>
             <TopBar title="Workouts" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of User Programs</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '10px' }}>List of User Programs</div>
+                    <TextField
+                        label="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+                        }}
+                    />
+                </div>
                 <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {userPrograms.map(item => (
+                    {filteredUserPrograms.map(item => (
                         <ListItemButton>
                             <ListItem key={item.userProgramID} workout={item} onClick={() => handlePopupOpen(item)} />
                         </ListItemButton>

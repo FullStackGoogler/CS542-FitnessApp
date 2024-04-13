@@ -1,35 +1,38 @@
 import TopBar from "../../Components/TopBar";
 import React, { useEffect, useState } from "react";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, Button, Pagination, TextField } from "@mui/material";
 import ListItem  from "./Components/SupplementListItem"
 
 import SupplementPopup from "./Components/SupplementPopup"
 import SupplementForm from "./Components/SupplementForm";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import usePagination from '../Paginate/paginate';
+
+import { SupplementItem } from "./Interfaces/SupplementItem";
+
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SupplementPage: React.FC = () => {
-    interface SupplementItem {
-        supplementid: number;
-        product_name: string;
-        product_category: string;
-        product_description: string;
-        brand_name: string;
-        link:string;
-        price:number;
-        price_per_serving:number;
-        overall_rating:number;
-        number_of_reviews: number;
-        verified_buyer_rating: number;
-        verified_buyer_number: number;
-        top_flavor_rated: string;
-        number_of_flavors: number;
-        average_flavor_rating: number;
-    }
-
     const [selectedSupplement, setSelectedSupplement] = useState<SupplementItem | null>(null);
     const [supplement, setSupplement] = useState<SupplementItem[]>([]);
     const [createSupplement, setCreateSupplement] = useState(false);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(10);
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredSupplements = supplement.filter(supplement =>
+        supplement.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = filteredSupplements.slice(indexOfFirstPost, indexOfLastPost);
+
+    const _DATA = usePagination(filteredSupplements, postsPerPage);
     
     /*let dummydata = [{
         Supplement_plan_id: 1,
@@ -72,7 +75,6 @@ const SupplementPage: React.FC = () => {
                     average_flavor_rating: supplement.average_flavor_rating
                 })));
             }).catch(error => console.error('Error:', error));
-
     })
 
     const handleClick = (item: SupplementItem) => {
@@ -112,22 +114,49 @@ const SupplementPage: React.FC = () => {
         setConfirmDiscardForm(false);
     };
 
-    //TODO: Use CSS to better align these
+    /*const paginate = ({ selected } : {selected:number}) => {
+        setCurrentPage(selected + 1);
+    };*/
+
+    const paginate = (e:any, p:number) => {
+        setCurrentPage(p);
+        _DATA.jump(p);
+    };
+    
     return (
         <div>
             <TopBar title="Supplements" titleColor="#ffffff"/>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Supplements</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '10px' }}>List of Supplements</div>
+                    <TextField
+                        label="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+                        }}
+                    />
+                </div>
                 <Button variant="contained" color="primary" onClick={handleCreate}>Add a Supplement</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {supplement.map(item => (
+                    {currentPosts.map(item => (
                         <ListItemButton>
-                            <ListItem supplement={item} onClick={() => handleClick(item)}/>
+                            <ListItem key={item.supplementid} supplement={item} onClick={() => handleClick(item)}/>
                         </ListItemButton>
                     ))}
                 </List>
+                <Pagination
+                  onChange={paginate}
+                  page={currentPage}
+                  count={Math.ceil(filteredSupplements.length / postsPerPage)}
+                  variant="outlined"
+                  shape="rounded"
+               />
             </div>
             <SupplementPopup selectedSupplement={selectedSupplement} onClose={handleClose} />
 

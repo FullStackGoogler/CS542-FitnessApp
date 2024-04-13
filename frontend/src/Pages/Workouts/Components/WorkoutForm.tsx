@@ -3,36 +3,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, S
 import Autocomplete from '@mui/material/Autocomplete';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface WorkoutItem { //Define interface for a singular complete User Program
-    userProgramID: number;
-    userProgramName: string;
-    userProgramDescription: string;
-    userProgramOwner: number;
-    daysPerWeek: number;
-    image: string;
-    workouts: {
-        workoutID: number;
-        workoutName: string;
-        targetGroup: string;
-        workoutPosition: number;
-        activities: {
-            activityID: number;
-            exerciseID: number;
-            muscleGroup: string;
-            reps: string;
-            sets: number;
-            rpe: number;
-            restTime: string;
-            notes: string;
-            position: number;
-        }[];
-    }[];
-}
-
-interface Exercise {
-    exercise_id: number;
-    exercise_name: string;
-}
+import { WorkoutItem } from "../Interfaces/WorkoutItem";
+import { Exercise } from "../Interfaces/Exercise";
 
 interface Props {
     open: boolean;
