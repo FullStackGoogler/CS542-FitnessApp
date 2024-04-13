@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ListItem, ListItemText, IconButton} from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -10,6 +10,26 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
 
     const [isStarred, setIsStarred] = useState(false);
 
+    //Automatically star any nutrition plans already favorited on page load
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:9000/api/userfollowsnutritionplan/1`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const isStarred = data.some(entry => entry.nutrition_plan_id === nutritionPlan.nutrition_plan_id);
+                    setIsStarred(isStarred);
+                } else {
+                    console.error('Failed to fetch userfollowsnutritionplan data:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching userfollowsnutritionplan data:', error.message);
+            }
+        };
+
+        fetchData();
+    }, [nutritionPlan.nutrition_plan_id]);
+
     function handleStarClick(event) {
         event.stopPropagation();
         setIsStarred(!isStarred);
@@ -17,6 +37,8 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
     };
     const handleStarChange = async () => {
         try {
+            console.log(nutritionPlan.nutrition_plan_id);
+            console.log(isStarred);
             const response = await fetch('http://localhost:9000/api/StarredNutritionPlan', {
                 method: 'POST',
                 headers: {
@@ -25,7 +47,7 @@ const NutritionPlanListItem = ({ nutritionPlan, onClick}) => {
                 body: JSON.stringify({
                     nutrition_plan_id: nutritionPlan.nutrition_plan_id,
                     isStarred: !isStarred,
-                    userId: 1
+                    userID: 1
                 })
             });
 

@@ -500,14 +500,29 @@ app.post('/api/StarredNutritionPlan', async (req, res) => {
       }
 
       if (isStarred) {  
-          await pool.query('INSERT INTO userfollowsnutritionplan (userID, nutrition_plan_id) VALUES ($1, $2)', [userID, nutrition_plan_id]);
+          await pool.query('INSERT INTO userfollowsnutritionplan (userid, nutrition_plan_id) VALUES ($1, $2)', [userID, nutrition_plan_id]);
           res.status(200).json({ message: 'Successfully added a favorite nutrition plan.' });
       }
       
       if (!isStarred) {
-          await pool.query('DELETE FROM userfollowsnutritionplan WHERE user_id = $1 AND nutrition_plan_id = $2', [userID, nutrition_plan_id]);
+          await pool.query('DELETE FROM userfollowsnutritionplan WHERE userid = $1 AND nutrition_plan_id = $2', [userID, nutrition_plan_id]);
           res.status(200).json({ message: 'Successfully deleted a favorite nutrition plan.' });
       }
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+/*
+  API GET Endpoint for fetching all 'userfollowsnutritionplan' entries with a matching userID.
+*/
+app.get('/api/userfollowsnutritionplan/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const result = await pool.query('SELECT * FROM userfollowsnutritionplan WHERE userid = $1', [userId]);
+      res.json(result.rows);
   } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ error: 'Internal Server Error' });
