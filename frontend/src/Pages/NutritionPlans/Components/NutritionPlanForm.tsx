@@ -8,34 +8,44 @@ interface Props {
     onClose: () => void;
     onSubmit: (nutritionPlanItem: NutritionPlanItem) => void;
     create: boolean;
-    id: number;
-    //inItem: NutritionPlanItem | null;
+    //id: number;
+    editItem: NutritionPlanItem | null;
 }
 
-const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit, create, id}) => {
+const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit, create, editItem}) => {
     const [dietType, setDietType] = useState("");
-    const [calorieGoal, setCalorieGoal] = useState("");
-    const [proteinGoal, setProteinGoal] = useState("");
-    const [fatGoal, setFatGoal] = useState("");
-    const [carbGoal, setCarbGoal] = useState("");
+    const [calorieGoal, setCalorieGoal] = useState(0);
+    const [proteinGoal, setProteinGoal] = useState(0);
+    const [fatGoal, setFatGoal] = useState(0);
+    const [carbGoal, setCarbGoal] = useState(0);
     const [isCreate, setIsCreate] = useState(true);
+    //const [addEdit, setAddEdit] = useState("");
     //const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
         if (open) {
             setIsCreate(create);
             if(create){
-                setDietType("");
+                setDietType(""); //TODO: this can be null
+            }
+            else{
+                if(editItem != null){
+                    setDietType(editItem.diet_type);
+                    setCalorieGoal(editItem.calorie_goal);
+                    setProteinGoal(editItem.protein_goal);
+                    setFatGoal(editItem.fat_goal);
+                    setCarbGoal(editItem.carb_goal);
+                }
             };
         }
     }, [open]);
 
     const handleCreatePlanSubmit = () => {
         
-        //let id = 0;
-        /*if(inItem != null){
-            id = inItem.nutrition_plan_id;
-        }*/
+        let id = 0;
+        if(editItem != null){
+            id = editItem.nutrition_plan_id;
+        }
         console.log("id: ", id);
         const nutritionPlan: NutritionPlanItem = {
             nutrition_plan_id: id,
@@ -80,7 +90,7 @@ const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit, create, i
                 },
             },
         }}>
-            <DialogTitle>Add a Nutrition Plan</DialogTitle>
+            <DialogTitle>Add/Edit a Nutrition Plan</DialogTitle>
             <DialogContent>
                 <TextField
                     label="Diet Type"
@@ -92,29 +102,29 @@ const NutritionPlanForm: React.FC<Props> = ({ open, onClose, onSubmit, create, i
                 <TextField
                     label="Calorie Goal"
                     fullWidth
-                    value={calorieGoal}
-                    onChange={(e) => setCalorieGoal(e.target.value)}
+                    value={calorieGoal.toString()}
+                    onChange={(e) => setCalorieGoal(Number(e.target.value))}
                     style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
                 <TextField
                     label="Protein Goal"
                     fullWidth
-                    value={proteinGoal}
-                    onChange={(e) => setProteinGoal(e.target.value)}
+                    value={proteinGoal.toString()}
+                    onChange={(e) => setProteinGoal(Number(e.target.value))}
                     style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
                 <TextField
                     label="Fat Goal"
                     fullWidth
-                    value={fatGoal}
-                    onChange={(e) => setFatGoal(e.target.value)}
+                    value={fatGoal.toString()}
+                    onChange={(e) => setFatGoal(Number(e.target.value))}
                     style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
                 <TextField
                     label="Carb Goal"
                     fullWidth
-                    value={carbGoal}
-                    onChange={(e) => setCarbGoal(e.target.value)}
+                    value={carbGoal.toString()}
+                    onChange={(e) => setCarbGoal(Number(e.target.value))}
                     style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
             </DialogContent>

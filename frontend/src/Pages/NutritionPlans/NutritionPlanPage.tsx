@@ -17,10 +17,11 @@ import { NutritionPlanItem } from "./Interfaces/NutritionPlanItem";
 
 const NutritionPlanPage: React.FC = () => {
     const [selectedNutritionPlan, setSelectedNutritionPlan] = useState<NutritionPlanItem | null>(null);
+    const [editNutritionPlan, setEditNutritionPlan] = useState<NutritionPlanItem|null>(null);
     const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanItem[]>([]);
     const [createPlan, setCreatePlan] = useState(false);
     const [editPlan, setEditPlan] = useState(false);
-    const [editId, setEditId] = useState(0);
+    //const [editId, setEditId] = useState(0);
     const [confirmDiscardForm, setConfirmDiscardForm] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -142,16 +143,14 @@ const NutritionPlanPage: React.FC = () => {
 
     const handleEdit = async (nutritionPlan: NutritionPlanItem) => {
         console.log("edit pressed");
-        setSelectedNutritionPlan(nutritionPlan);
+        setEditNutritionPlan(nutritionPlan);
         setEditPlan(true);
-        setCreatePlan(false);
-        setEditId(nutritionPlan.nutrition_plan_id);
+        //setEditId(nutritionPlan.nutrition_plan_id);
     }
 
     const handleEditPlanClose = () => {
         console.log("edit plan closed");
         setEditPlan(false);
-        setCreatePlan(true);
     };
 
     const handleDiscardFormClose = (discard: boolean) => {
@@ -214,9 +213,9 @@ const NutritionPlanPage: React.FC = () => {
             </div>
             <NutritionPlanPopup selectedNutritionPlan={selectedNutritionPlan} onClose={handleClose} />
 
-            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} create={true} id={editId}/>
+            <NutritionPlanForm open={createPlan} onClose={handleCreatePlanClose} onSubmit={handleCreatePlanSubmit} create={true} editItem={editNutritionPlan}/>
 
-            <NutritionPlanForm open={editPlan} onClose={handleEditPlanClose} onSubmit={handleEditPlanSubmit} create={false} id={editId}/>
+            <NutritionPlanForm open={editPlan} onClose={handleEditPlanClose} onSubmit={handleEditPlanSubmit} create={false} editItem={editNutritionPlan}/>
         </div>
     );
 }    
