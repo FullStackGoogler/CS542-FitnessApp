@@ -3,14 +3,14 @@ import TopBar from "../../Components/TopBar";
 import { List, ListItemButton, Button } from "@mui/material";
 
 const MealPage: React.FC = () => {
-    interface MealPlanItem { //Define interface for a singular complete User Program
+    interface MealPlanItem { //Define interface for a singular complete meal plan
         mealPlanID: number;
         owner: string;
         description: string;
         dailyMealPlan: {
             dailyMealPlanID: number;
             day: string;
-            meal: {
+            meals: {
                 mealID: number;
                 mealName: string;
                 cookTime: string;
@@ -22,13 +22,11 @@ const MealPage: React.FC = () => {
                 fat: number;
                 carbs: number;
                 protein: number;
-                otherNutritions:{
-                    saturatedFat: number;
-                    cholesterol:number;
-                    sodium: number;
-                    fiber: number;
-                    sugar: number;
-                }
+                saturatedFat: number;
+                cholesterol: number;
+                sodium: number;
+                fiber: number;
+                sugar: number;
                 recipeServings: number;
                 recipeYield: string;
                 recipeInstructions: string;
@@ -39,7 +37,7 @@ const MealPage: React.FC = () => {
     const [selectedProgram, setSelectedProgram] = useState<MealPlanItem | null>(null);
     const [userPrograms, setMealPlans] = useState<MealPlanItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);
-    
+
     //Fetch all User Programs on page load
     useEffect(() => {
         fetch('http://localhost:9000/api/mealplan')
@@ -52,51 +50,59 @@ const MealPage: React.FC = () => {
                     dailyMealPlan: []
                 })));
             })
-        .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error));
     })
 
     //Load a complete User Program
     const handlePopupOpen = (item: MealPlanItem) => {
         setSelectedProgram(item);
 
-        fetch(`http://localhost:9000/api/userprogram/${item.mealPlanID}/workouts`)
+        fetch(`http://localhost:9000/api/userprogram/${item.mealPlanID}/dailymealplan`)
             .then(response => response.json())
-            .then(workoutData => {
-                const workoutsMap = new Map<number, any>();
+            .then(dailyMealData => {
+                const mealMap = new Map<number, any>();
 
-                workoutData.forEach((workout: any) => {
-                    const { workout_id, workout_name, target_group, workoutposition, ...activity } = workout;
-                    const activityData = {
-                        activityID: activity.activity_id,
-                        exerciseName: activity.exercise_name,
-                        muscleGroup: activity.muscle_group,
-                        reps: activity.reps,
-                        sets: activity.sets,
-                        rpe: activity.rpe,
-                        restTime: activity.rest,
-                        notes: activity.note,
-                        position: activity.position
+                dailyMealData.forEach((dailymealplan: any) => {
+                    const { daily_meal_id, day, ...meal } = dailymealplan;
+                    const meal_data = {
+                        mealID: meal.mealid,
+                        mealName: meal.mealname,
+                        cookTime: meal.cooktime,
+                        prepTime: meal.prepTime,
+                        description: meal.description,
+                        receipeingredientquantity: meal.receipeingredientquantity,
+                        recipeingredientparts: meal.recipeingredientparts,
+                        calories: meal.calories,
+                        fat: meal.fatcontent,
+                        carbs: meal.carbohydratecontent,
+                        protein: meal.proteincontent,
+                        saturatedFat: meal.saturatedfatcontent,
+                        cholesterol: meal.cholesterolcontent,
+                        sodium: meal.sodiumcontent,
+                        fiber: meal.fibercontent,
+                        sugar: meal.sugarcontent,
+                        recipeServings: meal.recipeservings,
+                        recipeYield: meal.recipeyield,
+                        recipeInstructions: meal.recipeinstructions
                     };
 
-                    if (workoutsMap.has(workout_id)) {
-                        workoutsMap.get(workout_id).activities.push(activityData);
+                    if (mealMap.has(daily_meal_id)) {
+                        mealMap.get(daily_meal_id).meals.push(meal_data);
                     } else {
-                        workoutsMap.set(workout_id, {
-                            workoutID: workout_id,
-                            workoutName: workout_name,
-                            targetGroup: target_group,
-                            workoutPosition: workoutposition,
-                            activities: [activityData]
+                        mealMap.set(daily_meal_id, {
+                            dailyMealPlanID: daily_meal_id,
+                            day: day,
+                            meals: [meal_data]
                         });
                     }
                 });
-                const workouts = Array.from(workoutsMap.values());
-                setSelectedProgram(prevSelectedWorkout => ({
-                    ...prevSelectedWorkout!,
-                    workouts: workouts
-                })); 
+                const mealplan = Array.from(mealMap.values());
+                setSelectedProgram(prevSelectedMealPlan => ({
+                    ...prevSelectedMealPlan!,
+                    dailyMealPlan: mealplan
+                }));
             })
-    };    
+    };
 
     const handlePopupClose = () => {
         setSelectedProgram(null);
@@ -106,7 +112,7 @@ const MealPage: React.FC = () => {
         setCreateProgram(true);
     };
 
-    const handleCreateProgramSubmit = async (workoutItem: WorkoutItem) => {
+    const handleCreateProgramSubmit = async (workoutItem: MealPlanItem) => {
         //console.log("Workout Item:", workoutItem); //TODO: Debugging purposes
         //console.log("Workout Stringed:", JSON.stringify(workoutItem)) //TODO: Debugging purposes
         setCreateProgram(false);
@@ -133,23 +139,20 @@ const MealPage: React.FC = () => {
 
     return (
         <div>
-            <TopBar title="Meal Plans" titleColor="#ffffff"/>
+            <TopBar title="Meal Plans" titleColor="#ffffff" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of User Programs</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Meal Plans</div>
                 <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
                     {userPrograms.map(item => (
                         <ListItemButton>
-                            <ListItem key={item.userProgramID} workout={item} onClick={() => handlePopupOpen(item)} />
+                            
                         </ListItemButton>
                     ))}
                 </List>
             </div>
-            <WorkoutPopup selectedWorkout={selectedProgram} onClose={handlePopupClose} />
-
-            <WorkoutForm open={createProgram} onClose={handleCreateProgramSubmit}/>
         </div>
     );
 }
