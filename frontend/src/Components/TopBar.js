@@ -1,25 +1,28 @@
 import { useState} from 'react';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 
 import Drawer from '@mui/material/Drawer';
+import { Menu, MenuItem } from '@mui/material';
+
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-import HomeIcon from '@mui/icons-material/Home';
-import MapIcon from '@mui/icons-material/Map';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import MedicationIcon from '@mui/icons-material/Medication';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MapIcon from '@mui/icons-material/Map';
+import MedicationIcon from '@mui/icons-material/Medication';
+import MenuIcon from '@mui/icons-material/Menu';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -27,10 +30,6 @@ import theme from './theme';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
-import { //TODO: Either figure out CSS styling or use something else like Dialog (or code it raw) for a better looking popup
-  Menu,
-  MenuItem
-} from '@mui/material';
 
 import AppLogoIcon from './AppLogoIcon.png';
 

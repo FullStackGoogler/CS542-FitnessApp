@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import TopBar from "../../Components/TopBar";
+import { useState, useEffect } from "react";
+
 import { FormControl, InputLabel, Select, MenuItem, Typography, Divider } from "@mui/material";
+
+import TopBar from "../../Components/TopBar";
 
 import { WorkoutItem } from "../Workouts/Interfaces/WorkoutItem";
 import { NutritionPlanItem } from "../NutritionPlans/Interfaces/NutritionPlanItem";
@@ -10,9 +12,9 @@ const HomePage = () => {
     const [userPrograms, setUserPrograms] = useState<WorkoutItem[]>([]);
     const [selectedProgram, setSelectedProgram] = useState<WorkoutItem | null>(null);
 
-    const [supplements, setSupplements] = useState<SupplementItem[]>([]);
-
     const [nutritionPlans, setNutritionPlans] = useState<NutritionPlanItem[]>([]);
+
+    const [supplements, setSupplements] = useState<SupplementItem[]>([]);
 
     const [currentDay, setCurrentDay] = useState<number>(0);
     const currentDate = new Date();

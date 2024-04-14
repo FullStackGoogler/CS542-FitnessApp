@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import TopBar from '../../Components/TopBar';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
 import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
+
+import TopBar from '../../Components/TopBar';
 
 const GymFinderPage: React.FC = () => {
     const [currentLocation, setCurrentLocation] = useState<[number, number]>([0, 0]); //TODO: Implement properly
