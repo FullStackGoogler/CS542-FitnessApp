@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import { List, ListItemButton, Button, Pagination, TextField } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';;
+import SearchIcon from '@mui/icons-material/Search';
 
 import TopBar from "../../Components/TopBar";
-import ListItem  from "./Components/SupplementListItem"
-import SupplementPopup from "./Components/SupplementPopup"
+import ListItem  from "./Components/SupplementListItem";
+import SupplementPopup from "./Components/SupplementPopup";
 import SupplementForm from "./Components/SupplementForm";
-import { SupplementItem } from "./Interfaces/SupplementItem"
+import { SupplementItem } from "./Interfaces/SupplementItem";
 
-import usePagination from '../Paginate/paginate';
-
-
+import usePagination from '../../Components/paginate';
 
 const SupplementPage: React.FC = () => {
     const [selectedSupplement, setSelectedSupplement] = useState<SupplementItem | null>(null);

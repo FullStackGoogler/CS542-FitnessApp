@@ -5,11 +5,11 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 
 import TopBar from "../../Components/TopBar";
-import ListItem  from "./Components/NutritionPlanListItem"
-import NutritionPlanPopup from "./Components/NutritionPlanPopup"
+import ListItem  from "./Components/NutritionPlanListItem";
+import NutritionPlanPopup from "./Components/NutritionPlanPopup";
 import NutritionPlanForm from "./Components/NutritionPlanForm";
 
-import usePagination from '../Paginate/paginate';
+import usePagination from '../../Components/paginate';
 
 import { isTemplateHead } from "typescript";
 import { setMaxIdleHTTPParsers } from "http";

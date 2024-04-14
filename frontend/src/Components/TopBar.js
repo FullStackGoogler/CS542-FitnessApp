@@ -20,10 +20,12 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MapIcon from '@mui/icons-material/Map';
+import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
 import MedicationIcon from '@mui/icons-material/Medication';
 import MenuIcon from '@mui/icons-material/Menu';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import SettingsIcon from '@mui/icons-material/Settings';
+
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -119,7 +121,7 @@ export default function TopBar({ title, titleColor }) {
         <ListItem disablePadding component={Link} to="/nutritionplans">
           <ListItemButton>
             <ListItemIcon>
-              <RestaurantIcon/>
+              <MedicationLiquidIcon/>
             </ListItemIcon>
             <ListItemText primary="Nutrition Plans" sx={{ color: 'white' }} />
           </ListItemButton>

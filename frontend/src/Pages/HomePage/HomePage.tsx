@@ -295,7 +295,7 @@ const HomePage = () => {
                                 {supplement.product_name}
                             </Typography>
                             <Typography style={{ marginTop: "5px" }}>
-                                Link: {supplement.link}
+                                Link: <a href={supplement.link} target="_blank" rel="noopener noreferrer">{supplement.link}</a>
                             </Typography>
                         </div>
                     ))}
