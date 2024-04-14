@@ -265,10 +265,10 @@ const HomePage = () => {
                     {nutritionPlans.length > 0 && (
                         <div key={nutritionPlans[0].nutrition_plan_id} style={{ marginBottom: "10px", backgroundColor: "#f2f2f2", padding: "10px", borderRadius: "5px" }}>
                             <Typography variant="h6" component="div" style={{ fontWeight: "bold" }}>
-                                Calorie Goal: {nutritionPlans[0].calorie_goal}
+                            Diet Name: {nutritionPlans[0].diet_type}
                             </Typography>
                             <Typography style={{ marginTop: "5px" }}>
-                                Diet Type: {nutritionPlans[0].diet_type}
+                                Calorie Goal: {nutritionPlans[0].calorie_goal}
                             </Typography>
                             <Typography style={{ marginTop: "5px" }}>
                                 Protein Goal: {nutritionPlans[0].protein_goal}
