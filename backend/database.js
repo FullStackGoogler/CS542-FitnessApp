@@ -113,6 +113,9 @@ app.get('/api/exercises', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for retrieving all data from the 'meal_plan' table
+*/
 app.get('/api/mealplan', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM meal_plan');
@@ -461,7 +464,6 @@ app.post('/api/deleteNutritionPlan', async (req, res) => {
   }
 });
 
-
 /*
   API POST Endpoint for editing data from the 'nutrition_plan' table.
 */
@@ -502,7 +504,6 @@ app.post('/api/nutritionPlanEdit', async (req, res) => {
     client.release();
 }
 });
-
 
 /*
   API POST/DELETE Endpoint for adding/removing a nutritionPlan to the 'userfollowsnutritionplan' table.

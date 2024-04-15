@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import TopBar from "../../Components/TopBar";
+
 import { List, ListItemButton, Button, TextField } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+
+import TopBar from "../../Components/TopBar";
 import ListItem  from "./Components/WorkoutListItem"
 import WorkoutPopup from "./Components/WorkoutPopup"
 import WorkoutForm from "./Components/WorkoutForm";
-
 import { WorkoutItem } from "./Interfaces/WorkoutItem";
-
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
 
 import './WorkoutPage.css';
 
