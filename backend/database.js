@@ -123,7 +123,7 @@ app.get('/api/mealplan', async (req, res) => {
   }
 });
 
-app.get('/api/userprogram/:dailymealplanid/dailymealplan', async (req, res) => {
+app.get('/api/mealplan/:dailymealplanid/dailymealplan', async (req, res) => {
   const dailyMealPlanID = req.params.dailymealplanid;
 
   try {
@@ -132,16 +132,18 @@ app.get('/api/userprogram/:dailymealplanid/dailymealplan', async (req, res) => {
           SELECT 
                   mp.meal_plan_id,
                   mp.ispublic,
+                  mp.name,
                   mp.description,
                   mp.owner,
                   dmp.daily_meal_id,
                   dmp.day,
+                  dmpm.servings,
                   m.mealid,
                   m.mealname,
                   m.cooktime,
                   m.prepTime,
                   m.description,
-                  m.receipeingredientquantity,
+                  m.recipeingredientquantities,
                   m.recipeingredientparts,
                   m.calories,
                   m.fatcontent,
@@ -162,9 +164,9 @@ app.get('/api/userprogram/:dailymealplanid/dailymealplan', async (req, res) => {
               JOIN 
                   dailymealplanhasmeal dmpm ON dmpm.daily_meal_id = dmp.daily_meal_id
               JOIN
-                  meal m ON meal.mealid = dmp.mealid
+                  meal m ON m.mealid = dmpm.mealid
               WHERE 
-                  up.userprogramid = $1
+                  mp.meal_plan_id = $1
           `,
       values: [dailyMealPlanID]
     };
@@ -176,6 +178,20 @@ app.get('/api/userprogram/:dailymealplanid/dailymealplan', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/api/userfollowsmealplan/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const result = await pool.query('SELECT * FROM userfollowsmealplan WHERE userid = $1', [userId]);
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
   const userProgramId = req.params.userProgramId;

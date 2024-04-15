@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import TopBar from "../../Components/TopBar";
-import { List, ListItemButton, Button } from "@mui/material";
+import { List, ListItemButton, Button, TextField } from "@mui/material";
+import ListItem  from "./Components/MealListItem"
+import MealPopUp from "./Components/DailyMealPlanPopUp"
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import './WorkoutPage.css';
 
 const MealPage: React.FC = () => {
     interface MealPlanItem { //Define interface for a singular complete meal plan
         mealPlanID: number;
+        name: string;
         owner: string;
         description: string;
         dailyMealPlan: {
             dailyMealPlanID: number;
-            day: string;
+            day: number;
             meals: {
                 mealID: number;
                 mealName: string;
@@ -30,6 +36,7 @@ const MealPage: React.FC = () => {
                 recipeServings: number;
                 recipeYield: string;
                 recipeInstructions: string;
+                servings: number;
             }[];
         }[];
     }
@@ -37,6 +44,11 @@ const MealPage: React.FC = () => {
     const [selectedProgram, setSelectedProgram] = useState<MealPlanItem | null>(null);
     const [userPrograms, setMealPlans] = useState<MealPlanItem[]>([]);
     const [createProgram, setCreateProgram] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredUserPrograms = userPrograms.filter(program =>
+        program.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     //Fetch all User Programs on page load
     useEffect(() => {
@@ -46,6 +58,7 @@ const MealPage: React.FC = () => {
                 setMealPlans(data.map((plan: any) => ({
                     mealPlanID: plan.meal_plan_id,
                     owner: plan.owner,
+                    name: plan.name,
                     description: plan.description,
                     dailyMealPlan: []
                 })));
@@ -55,13 +68,14 @@ const MealPage: React.FC = () => {
 
     //Load a complete User Program
     const handlePopupOpen = (item: MealPlanItem) => {
+        console.log(item)
         setSelectedProgram(item);
 
-        fetch(`http://localhost:9000/api/userprogram/${item.mealPlanID}/dailymealplan`)
+        fetch(`http://localhost:9000/api/mealplan/${item.mealPlanID}/dailymealplan`)
             .then(response => response.json())
             .then(dailyMealData => {
+                console.log(dailyMealData)
                 const mealMap = new Map<number, any>();
-
                 dailyMealData.forEach((dailymealplan: any) => {
                     const { daily_meal_id, day, ...meal } = dailymealplan;
                     const meal_data = {
@@ -70,6 +84,7 @@ const MealPage: React.FC = () => {
                         cookTime: meal.cooktime,
                         prepTime: meal.prepTime,
                         description: meal.description,
+                        servings: meal.servings,
                         receipeingredientquantity: meal.receipeingredientquantity,
                         recipeingredientparts: meal.recipeingredientparts,
                         calories: meal.calories,
@@ -141,19 +156,33 @@ const MealPage: React.FC = () => {
         <div>
             <TopBar title="Meal Plans" titleColor="#ffffff" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Meal Plans</div>
-                <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Program</Button>
+                <TextField
+                        label="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+                        }}
+                    />
+                    </div>
+                <Button variant="contained" color="primary" onClick={handleCreateProgram}>Add a Meal Plan</Button>
             </div>
             <div style={{ position: 'absolute', top: '125px', bottom: '0', width: '100%' }}>
                 <List>
-                    {userPrograms.map(item => (
+                    {filteredUserPrograms.map(item => (
                         <ListItemButton>
-                            
+                            <ListItem key={item.mealPlanID} meal={item} onClick={() => handlePopupOpen(item)} />
                         </ListItemButton>
                     ))}
                 </List>
             </div>
+            <MealPopUp selectedDailyMealPlan={selectedProgram} onClose={handlePopupClose} />
         </div>
+        
     );
 }
 
