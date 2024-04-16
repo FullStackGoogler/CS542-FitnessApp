@@ -48,14 +48,14 @@ app.get('/api/supplements', async (req, res) => {
   API POST Endpoint for deleting data from the 'supplements' table.
 */
 app.post('/api/deleteSupplement', async (req, res) => {
-    const { supplementid } = req.body;
-    try {
-      await pool.query('DELETE FROM supplements WHERE supplementid = $1', [supplementid]);
-      res.status(200).json({ message: 'Successfully deleted a Supplement.' });
-    } catch (err) {
-      console.error('Error executing query:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+  const { supplementid } = req.body;
+  try {
+    await pool.query('DELETE FROM supplements WHERE supplementid = $1', [supplementid]);
+    res.status(200).json({ message: 'Successfully deleted a Supplement.' });
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
@@ -66,22 +66,22 @@ app.post('/api/StarredSupplement', async (req, res) => {
   const { supplementid, isStarred, user_id } = req.body;
 
   try {
-      if (!user_id) {
-          return res.status(400).json({ error: 'Invalid userID.' });
-      }
+    if (!user_id) {
+      return res.status(400).json({ error: 'Invalid userID.' });
+    }
 
-      if (isStarred) {  
-          await pool.query('INSERT INTO takes (user_id, supplementid) VALUES ($1, $2)', [user_id, supplementid]);
-          res.status(200).json({ message: 'Successfully added a favorite supplement.' });
-      }
-      
-      if (!isStarred) {
-          await pool.query('DELETE FROM takes WHERE user_id = $1 AND supplementid = $2', [user_id, supplementid]);
-          res.status(200).json({ message: 'Successfully deleted a favorite supplement.' });
-      }
+    if (isStarred) {
+      await pool.query('INSERT INTO takes (user_id, supplementid) VALUES ($1, $2)', [user_id, supplementid]);
+      res.status(200).json({ message: 'Successfully added a favorite supplement.' });
+    }
+
+    if (!isStarred) {
+      await pool.query('DELETE FROM takes WHERE user_id = $1 AND supplementid = $2', [user_id, supplementid]);
+      res.status(200).json({ message: 'Successfully deleted a favorite supplement.' });
+    }
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -92,11 +92,11 @@ app.get('/api/takes/:user_id', async (req, res) => {
   const userId = req.params.user_id;
 
   try {
-      const result = await pool.query('SELECT * FROM takes WHERE user_id = $1', [userId]);
-      res.json(result.rows);
+    const result = await pool.query('SELECT * FROM takes WHERE user_id = $1', [userId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -199,11 +199,11 @@ app.get('/api/userfollowsmealplan/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
-      const result = await pool.query('SELECT * FROM userfollowsmealplan WHERE userid = $1', [userId]);
-      res.json(result.rows);
+    const result = await pool.query('SELECT * FROM userfollowsmealplan WHERE userid = $1', [userId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -260,63 +260,8 @@ app.post('/api/mealItem', async (req, res) => {
     throw error;
   } finally {
     client.release();
-}
-});
-
-
-app.get('/api/userprogram/:meal_plan_id/dailyMeals', async (req, res) => {
-  const meal_plan_id = req.params.meal_plan_id;
-
-  try {
-    const programQuery = {
-      text: `
-          SELECT 
-                  up.userprogramid,
-                  up.ispublic,
-                  up.num_days_per_week,
-                  up.user_program_name,
-                  up.user_program_desc,
-                  w.dailyMeal_id,
-                  w.dailyMeal_name,
-                  w.target_group,
-                  w.position AS dailyMealPosition,
-                  a.activity_id,
-                  a.reps,
-                  a.sets,
-                  a.rpe,
-                  a.rest,
-                  a.note,
-                  a.position,
-                  e.exercise_id,
-                  e.exercise_name,
-                  e.muscle_group,
-                  e.equipment,
-                  e.video,
-                  u.username
-              FROM 
-                  userprogram up
-              JOIN
-                  usertable u ON up.owner = u.userid
-              JOIN 
-                  dailyMeal w ON up.userprogramid = w.userprogram_id
-              JOIN 
-                  meal a ON w.dailyMeal_id = a.dailyMeal
-              JOIN 
-                  exercise e ON a.exercise = e.exercise_id
-              WHERE 
-                  up.userprogramid = $1
-          `,
-      values: [meal_plan_id]
-    };
-
-    const result = await pool.query(programQuery);
-    res.json(result.rows);
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 /*
   API GET Endpoint for retrieving all data from the 'userprogram' table.
@@ -334,50 +279,50 @@ app.get('/api/userprograms', async (req, res) => {
 /*
   API GET Endpoint for retrieving the complete User Program data for a specified userprogramID value.
 */
-app.get('/api/userprogram/:meal_plan_id/dailyMeals', async (req, res) => {
-  const meal_plan_id = req.params.meal_plan_id;
+app.get('/api/userprogram/:userProgramId/workouts', async (req, res) => {
+  const userProgramId = req.params.userProgramId;
 
   try {
     const programQuery = {
       text: `
-          SELECT 
-            up.userprogramid,
-            up.ispublic,
-            up.num_days_per_week,
-            up.user_program_name,
-            up.user_program_desc,
-            w.dailyMeal_id,
-            w.dailyMeal_name,
-            w.target_group,
-            w.position AS dailyMealPosition,
-            a.activity_id,
-            a.reps,
-            a.sets,
-            a.rpe,
-            a.rest,
-            a.note,
-            a.position,
-            e.exercise_id,
-            e.exercise_name,
-            e.muscle_group,
-            e.equipment,
-            e.video,
-            u.username
-          FROM 
-            userprogram up
-          JOIN
-            usertable u ON up.owner = u.userid
-          JOIN 
-            dailyMeal w ON up.userprogramid = w.userprogram_id
-          JOIN 
-            meal a ON w.dailyMeal_id = a.dailyMeal
-          JOIN 
-            exercise e ON a.exercise = e.exercise_id
-          WHERE 
-            up.userprogramid = $1
-            `,
-          values: [meal_plan_id]
-      };
+          SELECT             
+          up.userprogramid,
+          up.ispublic,
+          up.num_days_per_week,
+          up.user_program_name,
+          up.user_program_desc,
+          w.workout_id,
+          w.workout_name,
+          w.target_group,
+          w.position AS workoutPosition,
+          a.activity_id,
+          a.reps,
+          a.sets,
+          a.rpe,
+          a.rest,
+          a.note,
+          a.position,
+          e.exercise_id,
+          e.exercise_name,
+          e.muscle_group,
+          e.equipment,
+          e.video,
+          u.username
+        FROM 
+          userprogram up
+        JOIN
+          usertable u ON up.owner = u.userid
+        JOIN 
+          workout w ON up.userprogramid = w.userprogram_id
+        JOIN 
+          activity a ON w.workout_id = a.workout
+        JOIN 
+          exercise e ON a.exercise = e.exercise_id
+        WHERE 
+          up.userprogramid = $1
+          `,
+      values: [userProgramId]
+    };
 
     const result = await pool.query(programQuery);
     res.json(result.rows);
@@ -440,7 +385,7 @@ app.post('/api/mealPlanItem', async (req, res) => {
     throw error;
   } finally {
     client.release();
-}
+  }
 });
 
 /*
@@ -450,22 +395,22 @@ app.post('/api/StarreddailyMeal', async (req, res) => {
   const { mealplanID, isStarred, userId } = req.body;
 
   try {
-      if (!userId) {
-          return res.status(400).json({ error: 'Invalid userID.' });
-      }
+    if (!userId) {
+      return res.status(400).json({ error: 'Invalid userID.' });
+    }
 
-      if (isStarred) {  
-          await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, mealplanID]);
-          res.status(200).json({ message: 'Successfully added a favorite UserProgram.' });
-      }
-      
-      if (!isStarred) {
-          await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, mealplanID]);
-          res.status(200).json({ message: 'Successfully deleted a favorite UserProgram.' });
-      }
+    if (isStarred) {
+      await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, mealplanID]);
+      res.status(200).json({ message: 'Successfully added a favorite UserProgram.' });
+    }
+
+    if (!isStarred) {
+      await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, mealplanID]);
+      res.status(200).json({ message: 'Successfully deleted a favorite UserProgram.' });
+    }
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -476,11 +421,11 @@ app.get('/api/userfollowsuserprogram/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
-      const result = await pool.query('SELECT * FROM userfollowsuserprogram WHERE userid = $1', [userId]);
-      res.json(result.rows);
+    const result = await pool.query('SELECT * FROM userfollowsuserprogram WHERE userid = $1', [userId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -510,12 +455,12 @@ app.post('/api/nutritionPlanItem', async (req, res) => {
     await client.query(insertNutritionPlanQuery, nutritionPlanValues);
 
     await client.query('COMMIT');
-} catch (error) {
+  } catch (error) {
     await client.query('ROLLBACK');
     throw error;
-} finally {
+  } finally {
     client.release();
-}
+  }
 });
 
 /*
@@ -549,7 +494,7 @@ app.post('/api/nutritionPlanEdit', async (req, res) => {
     await client.query('BEGIN');
 
     //Insert UserProgram first, retrieve the UserProgramID
-    const editNutritionPlanQuery = 
+    const editNutritionPlanQuery =
       `UPDATE nutrition_plan
           SET calorie_goal = $1,
               diet_type = $2,
@@ -565,12 +510,12 @@ app.post('/api/nutritionPlanEdit', async (req, res) => {
     await client.query(editNutritionPlanQuery, nutritionPlanValues);
 
     await client.query('COMMIT');
-} catch (error) {
+  } catch (error) {
     await client.query('ROLLBACK');
     throw error;
-} finally {
+  } finally {
     client.release();
-}
+  }
 });
 
 /*
@@ -580,22 +525,22 @@ app.post('/api/StarredNutritionPlan', async (req, res) => {
   const { nutrition_plan_id, isStarred, userID } = req.body;
 
   try {
-      if (!userID) {
-          return res.status(400).json({ error: 'Invalid userID.' });
-      }
+    if (!userID) {
+      return res.status(400).json({ error: 'Invalid userID.' });
+    }
 
-      if (isStarred) {  
-          await pool.query('INSERT INTO userfollowsnutritionplan (userid, nutrition_plan_id) VALUES ($1, $2)', [userID, nutrition_plan_id]);
-          res.status(200).json({ message: 'Successfully added a favorite nutrition plan.' });
-      }
-      
-      if (!isStarred) {
-          await pool.query('DELETE FROM userfollowsnutritionplan WHERE userid = $1 AND nutrition_plan_id = $2', [userID, nutrition_plan_id]);
-          res.status(200).json({ message: 'Successfully deleted a favorite nutrition plan.' });
-      }
+    if (isStarred) {
+      await pool.query('INSERT INTO userfollowsnutritionplan (userid, nutrition_plan_id) VALUES ($1, $2)', [userID, nutrition_plan_id]);
+      res.status(200).json({ message: 'Successfully added a favorite nutrition plan.' });
+    }
+
+    if (!isStarred) {
+      await pool.query('DELETE FROM userfollowsnutritionplan WHERE userid = $1 AND nutrition_plan_id = $2', [userID, nutrition_plan_id]);
+      res.status(200).json({ message: 'Successfully deleted a favorite nutrition plan.' });
+    }
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -606,11 +551,11 @@ app.get('/api/userfollowsnutritionplan/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
-      const result = await pool.query('SELECT * FROM userfollowsnutritionplan WHERE userid = $1', [userId]);
-      res.json(result.rows);
+    const result = await pool.query('SELECT * FROM userfollowsnutritionplan WHERE userid = $1', [userId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -621,11 +566,11 @@ app.get('/api/usertable/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
-      const result = await pool.query('SELECT * FROM usertable WHERE userid = $1', [userId]);
-      res.json(result.rows);
+    const result = await pool.query('SELECT * FROM usertable WHERE userid = $1', [userId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -646,7 +591,7 @@ app.post('/api/userSettingEdit', async (req, res) => {
     await client.query('BEGIN');
 
     //Insert UserProgram first, retrieve the UserProgramID
-    const editUserSettingQuery = 
+    const editUserSettingQuery =
       `UPDATE usertable
           SET username = $1,
               password = $2,
@@ -663,12 +608,12 @@ app.post('/api/userSettingEdit', async (req, res) => {
     await client.query(editUserSettingQuery, userSettingValues);
 
     await client.query('COMMIT');
-} catch (error) {
+  } catch (error) {
     await client.query('ROLLBACK');
     throw error;
-} finally {
+  } finally {
     client.release();
-}
+  }
 });
 
 
