@@ -7,10 +7,6 @@ import StarIcon from '@mui/icons-material/Star';
 
 const MealListItem = ({ meal, onClick }) => {
     const [isStarred, setIsStarred] = useState(false);
-    const [totalCalories, setCal] = useState(false);
-    const [totalFat, setFat] = useState(false);
-    const [totalCarb, setCarb] = useState(false);
-    const [totalProtein, setProtein] = useState(false);
 
     //Automatically star any user programs already favorited on page load
     useEffect(() => {

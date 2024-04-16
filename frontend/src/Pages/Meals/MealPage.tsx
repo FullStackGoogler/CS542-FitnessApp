@@ -5,6 +5,7 @@ import ListItem  from "./Components/MealListItem"
 import MealPopUp from "./Components/DailyMealPlanPopUp"
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import MealForm from "./Components/MealPlanCreateForm";
 import './WorkoutPage.css';
 
 const MealPage: React.FC = () => {
@@ -133,7 +134,7 @@ const MealPage: React.FC = () => {
         setCreateProgram(false);
 
         try {
-            const response = await fetch('http://localhost:9000/api/workoutItem', {
+            const response = await fetch('http://localhost:9000/api/mealItem', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -181,6 +182,7 @@ const MealPage: React.FC = () => {
                 </List>
             </div>
             <MealPopUp selectedDailyMealPlan={selectedProgram} onClose={handlePopupClose} />
+            <MealForm open={createProgram} onClose={handleCreateProgramSubmit}/>
         </div>
         
     );

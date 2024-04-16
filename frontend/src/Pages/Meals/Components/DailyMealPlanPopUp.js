@@ -1,9 +1,11 @@
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Typography, Divider } from "@mui/material";
 
+
+
 const DailyMealPlanPopUp = ({selectedDailyMealPlan, onClose }) => {
     if (!selectedDailyMealPlan) return null;
 
-    const { mealPlanID, mealDescription, dailyMealPlan} =selectedDailyMealPlan;
+    const { mealPlanID, name, owner, description, dailyMealPlan} =selectedDailyMealPlan;
 
     console.log(dailyMealPlan)
     const allDaily = [...dailyMealPlan].sort((a,b) => a.day - b.day)
@@ -11,12 +13,12 @@ const DailyMealPlanPopUp = ({selectedDailyMealPlan, onClose }) => {
         <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
             <DialogTitle>
                 <Typography variant="h5" component="div" style={{ fontWeight: "bold" }}>
-                    {mealPlanID}
+                    {name}
                 </Typography>
             </DialogTitle>
             <DialogContent>
                 <DialogContentText style={{ color: "#0000008a" }}>
-                    {mealDescription}
+                    {description}
                     <br/>
                 </DialogContentText>
             {allDaily.map(dailyPlan => (
