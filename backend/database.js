@@ -614,6 +614,64 @@ app.get('/api/userfollowsnutritionplan/:userId', async (req, res) => {
   }
 });
 
+/*
+  API GET Endpoint for fetching all 'usertable' entries with a matching userID.
+*/
+app.get('/api/usertable/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const result = await pool.query('SELECT * FROM usertable WHERE userid = $1', [userId]);
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+/*
+  API POST Endpoint for editing data from the 'usertable' table.
+*/
+app.post('/api/userSettingEdit', async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  const userSettingItem = req.body;
+
+  //console.log("Received workoutItem:", workoutItem); //TODO: Debugging purposes
+
+  res.status(200).json({ message: 'UserSettingItem received successfully.' });
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    //Insert UserProgram first, retrieve the UserProgramID
+    const editUserSettingQuery = 
+      `UPDATE usertable
+          SET username = $1,
+              password = $2,
+              firstname = $3,
+              lastname = $4,
+              email = $5,
+              phone = $6,
+              bday = $7,
+              weight = $8
+          WHERE userid = $9
+          RETURNING userid;`;
+    console.log(editUserSettingQuery);
+    const userSettingValues = [userSettingItem.username, userSettingItem.password, userSettingItem.firstname, userSettingItem.lastname, userSettingItem.email, userSettingItem.phone, userSettingItem.bday, userSettingItem.weight, userSettingItem.userid];
+    await client.query(editUserSettingQuery, userSettingValues);
+
+    await client.query('COMMIT');
+} catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+} finally {
+    client.release();
+}
+});
+
+
 app.listen(9000, () => {
   console.log('Server is running on port 9000');
 });
