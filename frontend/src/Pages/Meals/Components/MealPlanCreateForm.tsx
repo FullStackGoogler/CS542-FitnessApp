@@ -71,9 +71,9 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
         setDailies(updatedDailies);
     };
 
-    const handleDeleteExercise = (workoutIndex: number, activityIndex: number) => {
+    const handleDeleteExercise = (workoutIndex: number, selectionIndex: number) => {
         const updatedDailies = [...dailyMealPlans];
-        updatedDailies[workoutIndex].meals.splice(activityIndex, 1);
+        updatedDailies[workoutIndex].meals.splice(selectionIndex, 1);
         setDailies(updatedDailies);
     };
 
@@ -138,8 +138,8 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                 <Divider style={{ margin: '20px 0' }} />
                                 <DialogTitle>Option {index+1}</DialogTitle>
                                 <Button onClick={() => handleAddExercise(index)}>Add Meal</Button>
-                                {meal.meals.map((activity, activityIndex) => (
-                                    <div key={activityIndex}>
+                                {meal.meals.map((selection, selectionIndex) => (
+                                    <div key={selectionIndex}>
                                         <Divider style={{ margin: '10px 0' }} />
                                         <Autocomplete
                                             disablePortal
@@ -150,8 +150,8 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                             onChange={(e, newValue) => {
                                                 console.log(newValue)
                                                 const updatedDailies = [...dailyMealPlans];
-                                                updatedDailies[index].meals[activityIndex].mealID = newValue ? newValue.mealid : null;
-                                                console.log(updatedDailies[index].meals[activityIndex])
+                                                updatedDailies[index].meals[selectionIndex].mealID = newValue ? newValue.mealid : null;
+                                                console.log(updatedDailies[index].meals[selectionIndex])
                                                 setDailies(updatedDailies);
                                             }}
                                             renderInput={(params) => <TextField {...params} label="meals" />}
@@ -163,17 +163,17 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                                     fullWidth
                                                     label="Servings"
                                                     type="number"
-                                                    value={activity.servings}
+                                                    value={selection.servings}
                                                     onChange={(e) => {
                                                         const updatedDailies = [...dailyMealPlans];
-                                                        updatedDailies[index].meals[activityIndex].servings = parseInt(e.target.value);
-                                                        console.log(updatedDailies[index].meals[activityIndex])
+                                                        updatedDailies[index].meals[selectionIndex].servings = parseInt(e.target.value);
+                                                        console.log(updatedDailies[index].meals[selectionIndex])
                                                         setDailies(updatedDailies);
                                                     }}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <IconButton aria-label="delete" onClick={() => handleDeleteExercise(index, activityIndex)}>
+                                                <IconButton aria-label="delete" onClick={() => handleDeleteExercise(index, selectionIndex)}>
                                                     <DeleteIcon/>
                                                 </IconButton>
                                             </Grid>
