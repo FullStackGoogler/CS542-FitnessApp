@@ -9,7 +9,7 @@ const SupplementListItem = ({ supplement, onClick}) => {
 
     const [isStarred, setIsStarred] = useState(false);
 
-    //Automatically star any user programs already favorited on page load
+    //Automatically star any supplements already favorited on page load
     useEffect(() => {
         const fetchData = async () => {
             try {
