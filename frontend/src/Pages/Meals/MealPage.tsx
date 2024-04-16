@@ -6,7 +6,8 @@ import MealPopUp from "./Components/DailyMealPlanPopUp"
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import MealForm from "./Components/MealPlanCreateForm";
-import './WorkoutPage.css';
+
+import './MealPage.css';
 
 const MealPage: React.FC = () => {
     interface MealPlanItem { //Define interface for a singular complete meal plan
@@ -158,7 +159,7 @@ const MealPage: React.FC = () => {
             <TopBar title="Meal Plans" titleColor="#ffffff" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '75px 10px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>List of Meal Plans</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '10px' }}>List of Meal Plans</div>
                 <TextField
                         label="Search"
                         value={searchQuery}
