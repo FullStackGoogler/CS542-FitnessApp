@@ -34,6 +34,9 @@ const DailyMealPlanPopUp = ({selectedDailyMealPlan, onClose }) => {
                                    {meal.mealName} x {meal.servings} Servings
                                 </Typography>
                                 <Typography style={{ marginTop: "5px", color: "#0000008a", textTransform: "capitalize" }}>
+                                    Nutrition Per Serving
+                                </Typography>
+                                <Typography style={{ marginTop: "5px", color: "#0000008a", textTransform: "capitalize" }}>
                                     Calories: {meal.calories}
                                 </Typography>
                                 <Typography style={{ marginTop: "5px", color: "#0000008a" }}>

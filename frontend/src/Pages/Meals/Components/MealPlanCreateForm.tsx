@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { MealPlanItem } from "../Interfaces/MealPlanItem";
 import { Meal } from "../Interfaces/Meal";
+import { format } from 'react-string-format';
 
 interface Props {
     open: boolean;
@@ -90,6 +91,10 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
         return str.replace(/\b\w/g, (char) => char.toUpperCase());
     };
 
+    const mealInfo = (meal:Meal) =>{
+        return format('{0} Cal: {1}  Fat: {2}g  Carb: {3}g  Protein: {4}g', meal.mealname, meal.calories, meal.fatcontent, meal.carbohydratecontent, meal.proteincontent)
+    }
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md">
             <DialogTitle>Add a Program</DialogTitle>
@@ -141,7 +146,7 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                                             autoHighlight
                                             id="meal-selection"
                                             options={meals}
-                                            getOptionLabel={(meal) => capitalize(meal.mealname)}
+                                            getOptionLabel={(meal) => capitalize(mealInfo(meal))}
                                             onChange={(e, newValue) => {
                                                 console.log(newValue)
                                                 const updatedDailies = [...dailyMealPlans];
