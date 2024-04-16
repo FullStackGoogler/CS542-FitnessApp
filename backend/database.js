@@ -400,20 +400,19 @@ app.post('/api/StarreddailyMeal', async (req, res) => {
     }
 
     if (isStarred) {
-      await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, mealplanID]);
-      res.status(200).json({ message: 'Successfully added a favorite UserProgram.' });
+      await pool.query('INSERT INTO userfollowsmealplan (userid, meal_plan_id) VALUES ($1, $2)', [userId, mealplanID]);
+      res.status(200).json({ message: 'Successfully added a favorite MealPlan.' });
     }
 
     if (!isStarred) {
-      await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, mealplanID]);
-      res.status(200).json({ message: 'Successfully deleted a favorite UserProgram.' });
+      await pool.query('DELETE FROM userfollowsmealplan WHERE userid = $1 AND meal_plan_id = $2', [userId, mealplanID]);
+      res.status(200).json({ message: 'Successfully deleted a favorite MealPlan.' });
     }
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 /*
   API GET Endpoint for fetching all 'userfollowsuserprogram' entries with a matching userID.
 */
