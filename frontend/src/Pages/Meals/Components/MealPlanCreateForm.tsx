@@ -97,17 +97,17 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md">
-            <DialogTitle>Add a Program</DialogTitle>
+            <DialogTitle>Add a Meal Plan</DialogTitle>
             <DialogContent>
                 <TextField
-                    label="Program Name"
+                    label="Meal Plan Name"
                     fullWidth
                     value={programName}
                     onChange={(e) => setProgramName(e.target.value)}
                     style={{ marginTop: '1rem', marginBottom: '1em' }}
                 />
                 <TextField
-                    label="Program Description"
+                    label="Meal Plan Description"
                     fullWidth
                     multiline
                     rows={4}
@@ -116,9 +116,9 @@ const WorkoutForm: React.FC<Props> = ({ open, onClose }) => {
                     style={{ marginBottom: '1em' }}
                 />
                 <FormControl fullWidth>
-                    <InputLabel id="numberOfOptions-label">Days per Week</InputLabel>
+                    <InputLabel id="numberOfOptions-label">Number Of Options</InputLabel>
                     <Select
-                        label="Days per Week"
+                        label="Number Of Options"
                         labelId="numberOfOptions-label"
                         id="numberOfOptions"
                         value={numberOfOptions ?? ''}
