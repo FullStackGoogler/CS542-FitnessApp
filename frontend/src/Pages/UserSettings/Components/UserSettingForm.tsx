@@ -38,6 +38,10 @@ const UserSettingForm: React.FC<Props> = ({ open, onClose, onSubmit, editItem}) 
         }
     }, [open]);
 
+    const handleDiscard = () => {
+        onClose();
+    }
+
     const handleCreatePlanSubmit = () => {
         
         let id = 0;
@@ -151,6 +155,7 @@ const UserSettingForm: React.FC<Props> = ({ open, onClose, onSubmit, editItem}) 
                 />
             </DialogContent>
             <DialogActions>
+                <Button onClick={handleDiscard}>Discard Changes</Button>
                 <Button onClick={handleCreatePlanSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
