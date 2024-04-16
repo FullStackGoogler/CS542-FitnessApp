@@ -447,7 +447,7 @@ app.post('/api/mealPlanItem', async (req, res) => {
   API POST/DELETE Endpoint for adding/removing a User Program to the 'userfollowsuserprogram' table.
 */
 app.post('/api/StarreddailyMeal', async (req, res) => {
-  const { userprogramid, isStarred, userId } = req.body;
+  const { mealplanID, isStarred, userId } = req.body;
 
   try {
       if (!userId) {
@@ -455,12 +455,12 @@ app.post('/api/StarreddailyMeal', async (req, res) => {
       }
 
       if (isStarred) {  
-          await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, userprogramid]);
+          await pool.query('INSERT INTO userfollowsuserprogram (userid, userprogramid) VALUES ($1, $2)', [userId, mealplanID]);
           res.status(200).json({ message: 'Successfully added a favorite UserProgram.' });
       }
       
       if (!isStarred) {
-          await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, userprogramid]);
+          await pool.query('DELETE FROM userfollowsuserprogram WHERE userid = $1 AND userprogramid = $2', [userId, mealplanID]);
           res.status(200).json({ message: 'Successfully deleted a favorite UserProgram.' });
       }
   } catch (error) {

@@ -36,7 +36,7 @@ const MealListItem = ({ meal, onClick }) => {
 
     const handleStarChange = async () => {
         try {
-            const response = await fetch('http://localhost:9000/api/StarredWorkout', {
+            const response = await fetch('http://localhost:9000/api/StarreddailyMeal', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const MealListItem = ({ meal, onClick }) => {
             if (response.ok) {
                 setIsStarred(!isStarred); //Update local state
                 const responseData = await response.json();
-                console.log('UserProgram Star successfully modified:', responseData);
+                console.log('MealPlan Star successfully modified:', responseData);
             } else {
                 console.error('Failed to add/remove meal from favorites:', response.statusText);
             }
